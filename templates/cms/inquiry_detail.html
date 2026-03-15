@@ -1,0 +1,40 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}View Inquiry{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+    <a href="{% url 'cms_inquiries' %}" style="color: #7f8c8d; text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Inquiries</a>
+    <a href="{% url 'cms_inquiry_delete' inquiry.pk %}" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Delete Inquiry</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <div style="border-bottom: 1px solid var(--cms-border); margin-bottom: 20px; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h2 style="color: var(--cms-primary); margin-bottom: 5px;">{{ inquiry.name }}</h2>
+            <p style="color: #7f8c8d; font-size: 0.9rem;">Submitted on {{ inquiry.created_at|date:"F j, Y, P" }}</p>
+        </div>
+        <div style="background: #e1f5fe; color: #0288d1; padding: 6px 12px; border-radius: 4px; font-weight: 500;">
+            {{ inquiry.service_type }}
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid var(--cms-secondary);">
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Email Address</p>
+            <p style="font-weight: 500;"><a href="mailto:{{ inquiry.email }}" style="color: var(--cms-primary); text-decoration: none;"><i class="fas fa-envelope" style="margin-right: 5px; color: #7f8c8d;"></i> {{ inquiry.email }}</a></p>
+        </div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid var(--cms-secondary);">
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Phone Number</p>
+            <p style="font-weight: 500;"><a href="tel:{{ inquiry.phone }}" style="color: var(--cms-primary); text-decoration: none;"><i class="fas fa-phone-alt" style="margin-right: 5px; color: #7f8c8d;"></i> {{ inquiry.phone }}</a></p>
+        </div>
+    </div>
+    
+    <div>
+        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Message Details</p>
+        <div style="background: white; padding: 20px; border: 1px solid var(--cms-border); border-radius: 5px; line-height: 1.6; min-height: 150px; font-size: 1.05rem;">
+            {{ inquiry.message|linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}

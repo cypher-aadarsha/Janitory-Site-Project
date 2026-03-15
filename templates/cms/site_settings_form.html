@@ -1,0 +1,69 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <p style="color: #7f8c8d;">Update the global contact information, hero titles, and social links for your website.</p>
+</div>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        
+        <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">General Identity</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="site_name" style="display: block; margin-bottom: 8px; font-weight: 600;">Site/Business Name</label>
+                <input type="text" id="site_name" name="site_name" value="{{ settings.site_name }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="address" style="display: block; margin-bottom: 8px; font-weight: 600;">Physical Address</label>
+                <input type="text" id="address" name="address" value="{{ settings.address }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">Contact Details</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="contact_email" style="display: block; margin-bottom: 8px; font-weight: 600;">Email Address</label>
+                <input type="email" id="contact_email" name="contact_email" value="{{ settings.contact_email }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="contact_phone" style="display: block; margin-bottom: 8px; font-weight: 600;">Phone Number</label>
+                <input type="text" id="contact_phone" name="contact_phone" value="{{ settings.contact_phone }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="whatsapp_number" style="display: block; margin-bottom: 8px; font-weight: 600;">WhatsApp Number</label>
+                <input type="text" id="whatsapp_number" name="whatsapp_number" value="{{ settings.whatsapp_number }}" placeholder="e.g., 1234567890" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">Home Page Hero</h3>
+        <div style="margin-bottom: 20px;">
+            <label for="hero_title" style="display: block; margin-bottom: 8px; font-weight: 600;">Main Heading (H1)</label>
+            <input type="text" id="hero_title" name="hero_title" value="{{ settings.hero_title }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        <div style="margin-bottom: 30px;">
+            <label for="hero_subtitle" style="display: block; margin-bottom: 8px; font-weight: 600;">Subheading text</label>
+            <textarea id="hero_subtitle" name="hero_subtitle" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ settings.hero_subtitle }}</textarea>
+        </div>
+
+        <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">Social Links</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="facebook_url" style="display: block; margin-bottom: 8px; font-weight: 600;">Facebook URL</label>
+                <input type="url" id="facebook_url" name="facebook_url" value="{{ settings.facebook_url }}" placeholder="https://facebook.com/..." style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="instagram_url" style="display: block; margin-bottom: 8px; font-weight: 600;">Instagram URL</label>
+                <input type="url" id="instagram_url" name="instagram_url" value="{{ settings.instagram_url }}" placeholder="https://instagram.com/..." style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;"><i class="fas fa-save"></i> Save All Settings</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

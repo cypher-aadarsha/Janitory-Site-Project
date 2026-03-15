@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CMS Dashboard{% endblock %} - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --cms-primary: #2c3e50;
+            --cms-secondary: #3498db;
+            --cms-bg: #f5f6fa;
+            --cms-text: #2d3436;
+            --cms-sidebar: #1e272e;
+            --cms-white: #ffffff;
+            --cms-border: #dcdde1;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--cms-bg); color: var(--cms-text); display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; background-color: var(--cms-sidebar); color: var(--cms-white); display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; font-size: 1.5rem; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
+        .nav-links li a { display: flex; align-items: center; padding: 15px 20px; color: #a4b0be; text-decoration: none; transition: 0.3s; }
+        .nav-links li a:hover, .nav-links li a.active { background-color: rgba(255,255,255,0.05); color: var(--cms-white); border-left: 4px solid var(--cms-secondary); }
+        .nav-links li a i { width: 25px; margin-right: 10px; }
+        
+        /* Main Content */
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; }
+        .topbar { background-color: var(--cms-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .content-area { padding: 30px; flex-grow: 1; overflow-y: auto; }
+        
+        /* Utility */
+        .card { background: var(--cms-white); border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 500; transition: 0.3s; }
+        .btn-primary { background-color: var(--cms-secondary); color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table th, .table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--cms-border); }
+        .table th { font-weight: 600; color: var(--cms-primary); background-color: #f8f9fa; }
+        .messages { margin-bottom: 20px; }
+        .msg { padding: 15px; border-radius: 5px; margin-bottom: 10px; }
+        .msg.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            CMS Panel
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'cms_dashboard' %}" class="{% if request.resolver_match.url_name == 'cms_dashboard' %}active{% endif %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{% url 'cms_services' %}" class="{% if 'cms_service_' in request.resolver_match.url_name or request.resolver_match.url_name == 'cms_services' %}active{% endif %}"><i class="fas fa-broom"></i> Services</a></li>
+            <li><a href="{% url 'cms_service_areas' %}" class="{% if 'cms_service_area' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-map-marked-alt"></i> Service Areas</a></li>
+            <li><a href="{% url 'cms_testimonials' %}" class="{% if 'cms_testimonial' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-star"></i> Testimonials</a></li>
+            <li><a href="{% url 'cms_inquiries' %}" class="{% if 'cms_inquiry' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-envelope"></i> Inquiries</a></li>
+            <li><a href="{% url 'cms_site_settings' %}" class="{% if 'cms_site_settings' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-cog"></i> Site Settings</a></li>
+        </ul>
+        <div style="padding: 20px;">
+            <a href="{% url 'home' %}" class="btn" style="background: rgba(255,255,255,0.1); color: white; width: 100%; text-align: center;" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="topbar">
+            <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+            <div>
+                <span>Welcome, {{ request.user.username }}</span>
+                <a href="/admin/logout/" style="margin-left: 15px; color: #e74c3c; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </header>
+        
+        <div class="content-area">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="msg {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+</body>
+</html>

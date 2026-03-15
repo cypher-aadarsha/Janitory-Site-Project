@@ -1,0 +1,55 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}Testimonial Management{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <p style="color: #7f8c8d;">Review and manage client testimonials displayed on the site.</p>
+    <a href="{% url 'cms_testimonial_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Testimonial</a>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Client Name</th>
+                <th>Rating</th>
+                <th>Featured Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for testimonial in testimonials %}
+            <tr>
+                <td style="color: #7f8c8d; font-size: 0.9rem;">{{ testimonial.created_at|date:"M d, Y" }}</td>
+                <td style="font-weight: 500;">{{ testimonial.client_name }}</td>
+                <td>
+                    <span style="color: #f39c12; letter-spacing: 2px;">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= testimonial.rating %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                    </span>
+                    <span style="font-size: 0.8rem; color: #7f8c8d; margin-left: 5px;">({{ testimonial.rating }}/5)</span>
+                </td>
+                <td>
+                    {% if testimonial.is_featured %}
+                    <span style="background: #e1f5fe; color: #0288d1; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem;"><i class="fas fa-star" style="font-size: 0.7rem;"></i> Featured</span>
+                    {% else %}
+                    <span style="background: #f1f2f6; color: #7f8c8d; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem;">Hidden</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'cms_testimonial_edit' testimonial.pk %}" class="btn" style="background: #f1f2f6; color: var(--cms-primary); padding: 5px 10px;"><i class="fas fa-edit"></i> Edit</a>
+                    <a href="{% url 'cms_testimonial_delete' testimonial.pk %}" class="btn btn-danger" style="padding: 5px 10px;"><i class="fas fa-trash"></i> Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">No testimonials found. Click 'Add New Testimonial' to create one.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

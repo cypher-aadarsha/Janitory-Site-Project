@@ -1,0 +1,42 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}{{ action }} Testimonial{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'cms_testimonials' %}" style="color: #7f8c8d; text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Testimonials</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label for="client_name" style="display: block; margin-bottom: 8px; font-weight: 600;">Client Name *</label>
+            <input type="text" id="client_name" name="client_name" value="{{ testimonial.client_name }}" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="rating" style="display: block; margin-bottom: 8px; font-weight: 600;">Rating (1 to 5) *</label>
+            <input type="number" min="1" max="5" id="rating" name="rating" value="{{ testimonial.rating|default:5 }}" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="review_text" style="display: block; margin-bottom: 8px; font-weight: 600;">Review Content *</label>
+            <textarea id="review_text" name="review_text" rows="5" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ testimonial.review_text }}</textarea>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; background: #f8f9fa;">
+                <input type="checkbox" name="is_featured" {% if testimonial.is_featured or action == 'Add' %}checked{% endif %} style="width: 20px; height: 20px; margin-right: 15px;">
+                <span style="font-weight: 600;">Featured (Display on Homepage & Testimonials page)</span>
+            </label>
+        </div>
+        
+        <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; display: flex; justify-content: flex-end;">
+            <a href="{% url 'cms_testimonials' %}" class="btn" style="color: #7f8c8d; margin-right: 15px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;"><i class="fas fa-save"></i> Save Testimonial</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

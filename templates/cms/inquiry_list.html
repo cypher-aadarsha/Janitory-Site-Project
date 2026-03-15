@@ -1,0 +1,43 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}Inquiries & Quotes{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <p style="color: #7f8c8d;">Review messages and free quote requests submitted by potential clients.</p>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Service Requested</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inquiry in inquiries %}
+            <tr>
+                <td style="color: #7f8c8d; font-size: 0.9rem;">{{ inquiry.created_at|date:"M d, Y h:i A" }}</td>
+                <td style="font-weight: 500;">{{ inquiry.name }}</td>
+                <td>
+                    <span style="background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">{{ inquiry.service_type }}</span>
+                </td>
+                <td><a href="tel:{{ inquiry.phone }}" style="color: var(--cms-primary); text-decoration: none;">{{ inquiry.phone }}</a></td>
+                <td>
+                    <a href="{% url 'cms_inquiry_view' inquiry.pk %}" class="btn" style="background: var(--cms-secondary); color: white; padding: 5px 10px;"><i class="fas fa-eye"></i> View</a>
+                    <a href="{% url 'cms_inquiry_delete' inquiry.pk %}" class="btn btn-danger" style="padding: 5px 10px;"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">No inquiries have been submitted yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

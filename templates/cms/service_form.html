@@ -1,0 +1,50 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}{{ action }} Service{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'cms_services' %}" style="color: #7f8c8d; text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Services</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label for="title" style="display: block; margin-bottom: 8px; font-weight: 600;">Service Title *</label>
+            <input type="text" id="title" name="title" value="{{ service.title }}" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="icon_class" style="display: block; margin-bottom: 8px; font-weight: 600;">FontAwesome Icon Class</label>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Example: <code>fas fa-broom</code> or <code>fas fa-spray-can</code></p>
+            <input type="text" id="icon_class" name="icon_class" value="{{ service.icon_class }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="description" style="display: block; margin-bottom: 8px; font-weight: 600;">Description *</label>
+            <textarea id="description" name="description" rows="5" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ service.description }}</textarea>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="order" style="display: block; margin-bottom: 8px; font-weight: 600;">Display Order</label>
+                <input type="number" id="order" name="order" value="{{ service.order }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            
+            <div style="display: flex; align-items: flex-end;">
+                <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; width: 100%; background: #f8f9fa;">
+                    <input type="checkbox" name="is_active" {% if service.is_active or action == 'Add' %}checked{% endif %} style="width: 20px; height: 20px; margin-right: 15px;">
+                    <span style="font-weight: 600;">Active (Visible on Site)</span>
+                </label>
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; display: flex; justify-content: flex-end;">
+            <a href="{% url 'cms_services' %}" class="btn" style="color: #7f8c8d; margin-right: 15px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;"><i class="fas fa-save"></i> Save Service</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
