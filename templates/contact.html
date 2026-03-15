@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact & Request a Quote{% endblock %}
+{% block meta_description %}Get a free quote for cleaning services in California. Contact us for commercial, office, residential, or deep cleaning inquiries.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header" style="background-color: var(--primary-dark); color: white; padding: 80px 0; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">Contact Us</h1>
+        <p style="font-size: 1.2rem; color: #ccc;">Get your free quote today or reach out with any questions.</p>
+    </div>
+</div>
+
+<section class="section" style="padding: 80px 0; background-color: var(--bg-light); overflow: hidden;">
+    <div class="container" style="display: flex; flex-wrap: wrap; gap: 50px;">
+        
+        <!-- Contact Info -->
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 30px;">Get In Touch</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 40px;">We're ready to help you create a cleaner, healthier space. Fill out the form, give us a call, or send an email.</p>
+            
+            <div data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 30px; display: flex; align-items: flex-start;">
+                <div style="background-color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); margin-right: 20px;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 5px; font-size: 1.2rem;">Location</h4>
+                    <p>{{ site_settings.address|default:'California, USA' }}</p>
+                </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="200" style="margin-bottom: 30px; display: flex; align-items: flex-start;">
+                <div style="background-color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); margin-right: 20px;">
+                    <i class="fas fa-phone-alt" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 5px; font-size: 1.2rem;">Call Us</h4>
+                    <p><a href="tel:{{ site_settings.contact_phone|default:'123-456-7890' }}" style="color: var(--text-dark);">{{ site_settings.contact_phone|default:'123-456-7890' }}</a></p>
+                </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="300" style="margin-bottom: 30px; display: flex; align-items: flex-start;">
+                <div style="background-color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); margin-right: 20px;">
+                    <i class="fas fa-envelope" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 5px; font-size: 1.2rem;">Email Us</h4>
+                    <p><a href="mailto:{{ site_settings.contact_email|default:'info@cleaningservice.com' }}" style="color: var(--text-dark);">{{ site_settings.contact_email|default:'info@cleaningservice.com' }}</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div style="flex: 1.5; min-width: 350px;" data-aos="fade-left">
+            <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: var(--shadow);">
+                <h3 style="font-size: 1.8rem; margin-bottom: 20px; color: var(--primary-dark);">Request a Free Quote</h3>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                            <i class="fas fa-check-circle" style="margin-right: 5px;"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600;">Full Name *</label>
+                            <input type="text" id="name" name="name" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                        </div>
+                        <div>
+                            <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 600;">Phone Number *</label>
+                            <input type="text" id="phone" name="phone" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="email" style="display: block; margin-bottom: 8px; font-weight: 600;">Email Address *</label>
+                        <input type="email" id="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="service_type" style="display: block; margin-bottom: 8px; font-weight: 600;">Service Required *</label>
+                        <select id="service_type" name="service_type" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; background-color: white;">
+                            <option value="">-- Please Select a Service --</option>
+                            {% for service in services %}
+                            <option value="{{ service.title }}" {% if request.GET.service == service.title %}selected{% endif %}>{{ service.title }}</option>
+                            {% endfor %}
+                            <option value="Commercial Cleaning">Commercial Cleaning</option>
+                            <option value="Residential Cleaning">Residential Cleaning</option>
+                            <option value="Office Cleaning">Office Cleaning</option>
+                            <option value="Deep Cleaning">Deep Cleaning</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="message" style="display: block; margin-bottom: 8px; font-weight: 600;">Message / Details</label>
+                        <textarea id="message" name="message" rows="5" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">Submit Request <i class="fas fa-paper-plane" style="margin-left: 8px;"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

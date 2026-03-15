@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services{% endblock %}
+{% block meta_description %}Explore our range of professional cleaning services in California, including commercial cleaning, office cleaning, deep cleaning, and residential cleaning. {% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header" style="background-color: var(--primary-dark); color: white; padding: 80px 0; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">Our Services</h1>
+        <p style="font-size: 1.2rem; color: #ccc;">Customized cleaning solutions for every need</p>
+    </div>
+</div>
+
+<section class="section" style="padding: 80px 0;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px;">
+            {% for service in services %}
+            <div data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" class="service-item" style="background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;">
+                <div style="padding: 40px; text-align: center; background-color: var(--bg-light); border-bottom: 1px solid #eee;">
+                    <i class="{{ service.icon_class|default:'fas fa-broom' }}" style="font-size: 4rem; color: var(--primary-color);"></i>
+                </div>
+                <div style="padding: 30px; flex-grow: 1;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-dark);">{{ service.title }}</h3>
+                    <p style="line-height: 1.7;">{{ service.description }}</p>
+                </div>
+                <div style="padding: 0 30px 30px;">
+                    <a href="{% url 'contact' %}?service={{ service.title|urlencode }}" class="btn btn-primary" style="width: 100%;">Request this Service</a>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align: center;" data-aos="fade-in">
+                <h3>We are currently updating our list of services! Please check back soon or contact us directly.</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to action block -->
+<section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; padding: 60px 0; text-align: center;">
+    <div class="container" data-aos="zoom-in">
+        <h2 style="color: white; margin-bottom: 20px;">Need a custom cleaning plan?</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 30px; color: #eee;">We can create a tailored schedule and services package that fits your exact requirements.</p>
+        <a href="{% url 'contact' %}" class="btn" style="background-color: white; color: var(--primary-dark); font-weight: bold;">Contact Us</a>
+    </div>
+</section>
+
+{% endblock %}

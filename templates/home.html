@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_description %}Top-rated commercial and residential cleaning services in California. Get your free quote today for a spotless environment.{% endblock %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container" data-aos="zoom-in" data-aos-duration="1000">
+        <h1 data-aos="fade-up" data-aos-delay="200">{{ site_settings.hero_title|default:'Professional Cleaning Services in California' }}</h1>
+        <p data-aos="fade-up" data-aos-delay="400">{{ site_settings.hero_subtitle|default:'We provide top-notch commercial and residential cleaning with an emphasis on quality, trust, and reliability.' }}</p>
+        <div data-aos="zoom-in-up" data-aos-delay="600">
+            <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 35px;">Get a Free Quote</a>
+            <a href="tel:{{ site_settings.contact_phone|default:'123-456-7890' }}" class="btn btn-secondary" style="font-size: 1.1rem; padding: 15px 35px; margin-left: 10px;">Call Now</a>
+        </div>
+    </div>
+</section>
+
+<!-- Services Overview -->
+<section class="section" style="padding: 80px 0; background-color: var(--bg-light);">
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark);">Our Services</h2>
+            <p>Comprehensive cleaning solutions tailored to your needs.</p>
+        </div>
+        
+        <div class="grid-services" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            {% for service in services %}
+            <div class="service-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" style="background: white; border-radius: 10px; padding: 30px; text-align: center; box-shadow: var(--shadow); transition: var(--transition);">
+                <div class="icon" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;">
+                    <i class="{{ service.icon_class|default:'fas fa-broom' }}"></i>
+                </div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description|truncatewords:20 }}</p>
+                <a href="{% url 'services' %}" style="color: var(--primary-color); font-weight: 600;">Learn More &rarr;</a>
+            </div>
+            {% empty %}
+            <p style="grid-column: 1 / -1; text-align: center;" data-aos="fade-up">Services coming soon.</p>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 40px;" data-aos="zoom-in" data-aos-offset="-50">
+            <a href="{% url 'services' %}" class="btn btn-secondary">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section" style="padding: 80px 0; overflow: hidden;">
+    <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; gap: 50px;">
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 20px;">Why Choose <span style="color: var(--primary-color);">Us?</span></h2>
+            <p>With years of experience serving California, we pride ourselves on delivering exceptional cleaning services that exceed expectations. We use eco-friendly products, employ highly trained staff, and guarantee your satisfaction.</p>
+            <ul style="margin-top: 20px; line-height: 2;">
+                <li data-aos="fade-up" data-aos-delay="100"><i class="fas fa-check-circle" style="color: var(--secondary-color); margin-right: 10px;"></i> Trained & Vetted Professionals</li>
+                <li data-aos="fade-up" data-aos-delay="200"><i class="fas fa-check-circle" style="color: var(--secondary-color); margin-right: 10px;"></i> Eco-Friendly Cleaning Products</li>
+                <li data-aos="fade-up" data-aos-delay="300"><i class="fas fa-check-circle" style="color: var(--secondary-color); margin-right: 10px;"></i> 100% Satisfaction Guarantee</li>
+                <li data-aos="fade-up" data-aos-delay="400"><i class="fas fa-check-circle" style="color: var(--secondary-color); margin-right: 10px;"></i> Flexible Scheduling</li>
+            </ul>
+        </div>
+        <div style="flex: 1; min-width: 300px; text-align: center;" data-aos="fade-left">
+            <img src="{% static 'images/why-choose-us.png' %}" alt="Professional Cleaning Detail" style="width: 100%; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <div data-aos="zoom-in" data-aos-delay="200" style="background-color: var(--bg-light); padding: 40px; border-radius: 20px; box-shadow: var(--shadow);">
+                <i class="fas fa-shield-alt" style="font-size: 5rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+                <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Fully Insured & Bonded</h3>
+                <p>Your property is safe with us. We are fully licensed, insured, and bonded for your peace of mind.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Overview -->
+<section class="section" style="padding: 80px 0; background-color: var(--primary-dark); color: white;">
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
+            <h2 style="font-size: 2.5rem; color: white;">What Our Clients Say</h2>
+        </div>
+        
+        <div class="grid-testimonials" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            {% for testimonial in testimonials %}
+            <div class="testimonial-card" data-aos="zoom-in-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 30px; backdrop-filter: blur(5px);">
+                <div class="stars" style="color: #FFD700; margin-bottom: 15px;">
+                    {% for i in "12345"|make_list %}{% if forloop.counter <= testimonial.rating %}<i class="fas fa-star"></i>{% endif %}{% endfor %}
+                </div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px;">"{{ testimonial.text|truncatechars:150 }}"</p>
+                <h4 style="color: white; margin: 0;">- {{ testimonial.name }}</h4>
+            </div>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1 / -1;" data-aos="fade-in">No testimonials yet.</p>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 40px;" data-aos="fade-up">
+            <a href="{% url 'testimonials' %}" class="btn" style="background-color: white; color: var(--primary-dark);">Read More Reviews</a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section" style="padding: 100px 0; text-align: center; background-color: var(--bg-light);">
+    <div class="container" data-aos="zoom-in">
+        <h2 style="font-size: 3rem; color: var(--primary-dark); margin-bottom: 20px;">Ready for a Cleaner Space?</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">Contact us today to schedule your cleaning service. Let us handle the mess so you can focus on what matters most.</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px; box-shadow: 0 10px 20px rgba(11, 92, 255, 0.4);">Book Cleaning Now</a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+{% block meta_description %}Learn about our California-based cleaning company, our mission, and why we are the trusted choice for commercial and residential cleaning.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header" style="background-color: var(--primary-dark); color: white; padding: 80px 0; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">About Us</h1>
+        <p style="font-size: 1.2rem; color: #ccc;">Your Trusted Cleaning Partner in California</p>
+    </div>
+</div>
+
+<section class="section" style="padding: 80px 0; overflow: hidden;">
+    <div class="container" style="display: flex; flex-wrap: wrap; gap: 50px; align-items: center;">
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 20px;">Our Story</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">{{ site_settings.site_name|default:'Janitorial Experts' }} was founded with a single mission in mind: to provide the highest quality cleaning services in California while maintaining the utmost integrity, reliability, and respect for our clients' spaces.</p>
+            <p style="font-size: 1.1rem; line-height: 1.8;">Whether it's a sprawling corporate office or a cozy residential home, we approach every job with the same level of dedication and attention to detail. Our team of vetted, trained professionals uses state-of-the-art equipment and eco-friendly products to ensure a deep, safe clean.</p>
+        </div>
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-left">
+            <img src="{% static 'images/about-team.png' %}" alt="Our Professional Cleaning Team" style="width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <div style="padding: 40px; background-color: var(--bg-light); border-radius: 10px; border-left: 5px solid var(--primary-color);">
+                <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Our Mission</h3>
+                <p style="font-size: 1.1rem; font-style: italic;">"To deliver unparalleled cleaning services that enhance the health, productivity, and happiness of our clients, driven by consistency, trust, and exceptional customer care."</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values -->
+<section class="section" style="padding: 80px 0; background-color: var(--bg-light);">
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark);">Core Values</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div data-aos="zoom-in" data-aos-delay="100" class="value-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: var(--shadow); transition: transform 0.3s ease;">
+                <i class="fas fa-handshake" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 20px;"></i>
+                <h3>Reliability</h3>
+                <p>We show up on time and deliver consistent results, every single time.</p>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="200" class="value-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: var(--shadow); transition: transform 0.3s ease;">
+                <i class="fas fa-leaf" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 20px;"></i>
+                <h3>Sustainability</h3>
+                <p>We use green, eco-friendly cleaning solutions that are safe for you and the planet.</p>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="300" class="value-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: var(--shadow); transition: transform 0.3s ease;">
+                <i class="fas fa-star" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 20px;"></i>
+                <h3>Excellence</h3>
+                <p>We don't cut corners; we clean them. Quality is at the heart of what we do.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

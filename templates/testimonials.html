@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonials{% endblock %}
+{% block meta_description %}Read what our satisfied clients have to say about our reliable, professional, and thorough cleaning services across California.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header" style="background-color: var(--primary-dark); color: white; padding: 80px 0; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">Client Testimonials</h1>
+        <p style="font-size: 1.2rem; color: #ccc;">Don't just take our word for it—see what our customers say.</p>
+    </div>
+</div>
+
+<section class="section" style="padding: 80px 0; background-color: var(--bg-light);">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            {% for testimonial in testimonials %}
+            <div data-aos="zoom-in-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" class="testimonial-box" style="background: white; border-radius: 10px; padding: 40px; box-shadow: var(--shadow); position: relative; transition: var(--transition);">
+                <i class="fas fa-quote-left" style="font-size: 3rem; color: rgba(11, 92, 255, 0.1); position: absolute; top: 20px; right: 20px;"></i>
+                <div class="stars" style="color: #FFD700; margin-bottom: 20px; font-size: 1.2rem;">
+                    {% for i in "12345"|make_list %}{% if forloop.counter <= testimonial.rating %}<i class="fas fa-star"></i>{% endif %}{% endfor %}
+                </div>
+                <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-dark); margin-bottom: 20px;">"{{ testimonial.text }}"</p>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h4 style="margin: 0; color: var(--primary-color);">{{ testimonial.name }}</h4>
+                        <small style="color: var(--text-light);">{{ testimonial.created_at|date:"F d, Y" }}</small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align: center;" data-aos="fade-in">
+                <h3>No testimonials have been added yet.</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

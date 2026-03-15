@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Professional cleaning services in California for commercial and residential properties.{% endblock %}">
+    <title>{% block title %}Cleaning Services{% endblock %} - {{ site_settings.site_name|default:"Janitorial Experts" }}</title>
+    
+    <!-- CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Local Business Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CleaningService",
+      "name": "{{ site_settings.site_name|default:'Janitorial Experts' }}",
+      "image": "",
+      "email": "{{ site_settings.contact_email|default:'info@cleaningservice.com' }}",
+      "telephone": "{{ site_settings.contact_phone|default:'123-456-7890' }}",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ site_settings.address|default:'California, USA' }}",
+        "addressLocality": "California",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      },
+      "url": "{{ request.build_absolute_uri }}"
+    }
+    </script>
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <div class="contact-info">
+                <a href="mailto:{{ site_settings.contact_email|default:'info@cleaningservice.com' }}"><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:'info@cleaningservice.com' }}</a>
+                <a href="tel:{{ site_settings.contact_phone|default:'123-456-7890' }}"><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:'123-456-7890' }}</a>
+            </div>
+            <div class="social-links">
+                {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-inner">
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-leaf"></i> {{ site_settings.site_name|default:"Janitorial Experts" }}
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'service_areas' %}">Service Areas</a></li>
+                <li><a href="{% url 'testimonials' %}">Testimonials</a></li>
+                <li><a href="{% url 'contact' %}" class="btn btn-primary">Get a Free Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-col">
+                <h3>About {{ site_settings.site_name|default:"Janitorial Experts" }}</h3>
+                <p>Providing top-tier commercial, office, and residential cleaning services across California. Your trust is our priority.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'services' %}">Our Services</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Request a Quote</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> {{ site_settings.address|default:'California, USA' }}</p>
+                <p><i class="fas fa-phone"></i> {{ site_settings.contact_phone|default:'123-456-7890' }}</p>
+                <p><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:'info@cleaningservice.com' }}</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {{ site_settings.site_name|default:"Janitorial Experts" }}. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    {% if site_settings.whatsapp_number %}
+    <a href="https://wa.me/{{ site_settings.whatsapp_number }}" class="floating-btn whatsapp-btn" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    {% endif %}
+    <a href="tel:{{ site_settings.contact_phone|default:'123-456-7890' }}" class="floating-btn phone-btn" aria-label="Call Us">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- AOS Animation Library JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out-cubic',
+                once: true,
+                offset: 50
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
