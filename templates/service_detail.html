@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ service.meta_title|default:service.title }} | Janitorial Services{% endblock %}
+{% block meta_description %}{{ service.meta_description|default:service.description }}{% endblock %}
+
+{% block content %}
+<section class="page-header" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{% if service.image %}{{ service.image.url }}{% else %}/static/images/hero-bg.jpg{% endif %}') center/cover; padding: 100px 0; color: white; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1>{{ service.title }}</h1>
+        <p class="lead" style="max-width: 600px; margin: 20px auto;">Professional cleaning tailored entirely for your needs.</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row" style="display: flex; flex-wrap: wrap; gap: 40px;">
+            <div class="col-md-8" data-aos="fade-right">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px;">About Our {{ service.title }} Service</h2>
+                
+                {% if service.detailed_content %}
+                    <div class="service-content" style="font-size: 1.1rem; line-height: 1.8; color: #444;">
+                        {{ service.detailed_content|safe|linebreaks }}
+                    </div>
+                {% else %}
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">{{ service.description|linebreaks }}</p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">We provide industry-leading {{ service.title }} tailored to exceed your expectations. Contact us today for a custom quote that perfectly meets your unique requirements.</p>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-left">
+                <div class="card p-4" style="background: #f8f9fa; border-radius: 10px; border-top: 4px solid var(--primary-color); position: sticky; top: 20px;">
+                    <h3 style="margin-bottom: 20px;">Ready to Book?</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Get a free, no-obligation quote for our {{ service.title }} today.</p>
+                    <a href="{% url 'contact' %}?service={{ service.title|urlencode }}" class="btn btn-primary" style="display: block; text-align: center; width: 100%; padding: 15px;">Request a Quote <i class="fas fa-arrow-right"></i></a>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 15px;">Other Services</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            {% for other in services_list %}
+                                {% if other.id != service.id %}
+                                    <li style="margin-bottom: 10px;"><a href="{% url 'service_detail' other.slug %}" style="color: var(--secondary-color); text-decoration: none;"><i class="fas fa-check text-primary" style="margin-right: 10px;"></i>{{ other.title }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <div style="margin-top: 15px;">
+                            <a href="{% url 'services' %}" style="color: #666; font-size: 0.9rem;">View all services &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

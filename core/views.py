@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting
+from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking
 
 def home(request):
     services = Service.objects.filter(is_active=True)[:3]
@@ -19,9 +19,19 @@ def services_page(request):
     services = Service.objects.filter(is_active=True)
     return render(request, 'services.html', {'services': services})
 
+from django.shortcuts import get_object_or_404
+
+def service_detail(request, slug):
+    service = get_object_or_404(Service, slug=slug, is_active=True)
+    return render(request, 'service_detail.html', {'service': service})
+
 def service_areas(request):
     areas = ServiceArea.objects.filter(is_active=True)
     return render(request, 'service_areas.html', {'areas': areas})
+
+def service_area_detail(request, slug):
+    area = get_object_or_404(ServiceArea, slug=slug, is_active=True)
+    return render(request, 'service_area_detail.html', {'area': area})
 
 def testimonials_page(request):
     testimonials = Testimonial.objects.all()
@@ -32,19 +42,33 @@ def contact(request):
         name = request.POST.get('name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
-        service_type = request.POST.get('service_type')
-        message = request.POST.get('message')
+        address = request.POST.get('address')
+        service_id = request.POST.get('service_id')
+        preferred_date = request.POST.get('preferred_date')
+        preferred_time = request.POST.get('preferred_time')
+        notes = request.POST.get('notes')
 
-        Inquiry.objects.create(
+        # Connect the selected service if provided
+        service_instance = None
+        if service_id:
+            try:
+                service_instance = Service.objects.get(id=service_id)
+            except Service.DoesNotExist:
+                pass
+
+        Booking.objects.create(
             name=name,
             email=email,
             phone=phone,
-            service_type=service_type,
-            message=message
+            address=address,
+            service=service_instance,
+            preferred_date=preferred_date,
+            preferred_time=preferred_time,
+            notes=notes
         )
         
         # In a real scenario, we'd send an email here using django.core.mail.send_mail
-        messages.success(request, "Your inquiry has been submitted successfully. We will contact you soon!")
+        messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
         return redirect('contact')
 
     services = Service.objects.filter(is_active=True)

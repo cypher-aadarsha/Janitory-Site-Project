@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ area.meta_title|default:area.city|add:" Cleaning Services" }} | Janitorial Site{% endblock %}
+{% block meta_description %}{{ area.meta_description|default:area.description }}{% endblock %}
+
+{% block content %}
+<section class="page-header" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/images/hero-bg.jpg') center/cover; padding: 100px 0; color: white; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1>Cleaning Services in {{ area.city }}</h1>
+        <p class="lead" style="max-width: 600px; margin: 20px auto;">We provide top-rated, professional cleaning solutions throughout {{ area.city }} and surrounding areas.</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+            <div class="col-md-6" data-aos="fade-right">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px;">Your Trusted Cleaners in {{ area.city }}</h2>
+                
+                {% if area.detailed_content %}
+                    <div class="area-content" style="font-size: 1.1rem; line-height: 1.8; color: #444;">
+                        {{ area.detailed_content|safe|linebreaks }}
+                    </div>
+                {% else %}
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">{{ area.description }}</p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">Our highly trained and vetted cleaning professionals are ready to serve residential and commercial clients across {{ area.city }}. We use eco-friendly products and state-of-the-art equipment to ensure a spotless environment.</p>
+                {% endif %}
+                
+                <div style="margin-top: 30px;">
+                    <a href="{% url 'contact' %}" class="btn btn-primary" style="padding: 15px 30px; font-size: 1.1rem;">Get a Free Quote in {{ area.city }}</a>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1" data-aos="fade-left">
+                <!-- Using a placeholder map image or styling -->
+                <div style="background: #e9ecef; border-radius: 10px; height: 350px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; color: #6c757d;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+                        <h3>{{ area.city }}</h3>
+                        <p>Service Coverage Zone</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

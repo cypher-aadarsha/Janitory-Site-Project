@@ -59,6 +59,7 @@
             <li><a href="{% url 'cms_service_areas' %}" class="{% if 'cms_service_area' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-map-marked-alt"></i> Service Areas</a></li>
             <li><a href="{% url 'cms_testimonials' %}" class="{% if 'cms_testimonial' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-star"></i> Testimonials</a></li>
             <li><a href="{% url 'cms_inquiries' %}" class="{% if 'cms_inquiry' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-envelope"></i> Inquiries</a></li>
+            <li><a href="{% url 'cms_bookings' %}" class="{% if 'cms_booking' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-calendar-alt"></i> Bookings (CRM)</a></li>
             <li><a href="{% url 'cms_site_settings' %}" class="{% if 'cms_site_settings' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-cog"></i> Site Settings</a></li>
         </ul>
         <div style="padding: 20px;">

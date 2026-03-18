@@ -23,9 +23,35 @@
         </div>
         
         <div style="margin-bottom: 20px;">
-            <label for="description" style="display: block; margin-bottom: 8px; font-weight: 600;">Description *</label>
-            <textarea id="description" name="description" rows="5" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ service.description }}</textarea>
+            <label for="description" style="display: block; margin-bottom: 8px; font-weight: 600;">Short Description *</label>
+            <textarea id="description" name="description" rows="3" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ service.description }}</textarea>
         </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">SEO & Dedicated Page Content</h3>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="slug" style="display: block; margin-bottom: 8px; font-weight: 600;">Custom URL Slug (Optional)</label>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Leave blank to auto-generate from the title (e.g., <code>office-cleaning</code>)</p>
+            <input type="text" id="slug" name="slug" value="{{ service.slug|default:'' }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="detailed_content" style="display: block; margin-bottom: 8px; font-weight: 600;">Detailed Page Content</label>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">This content appears only on the dedicated service page.</p>
+            <textarea id="detailed_content" name="detailed_content" rows="8" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ service.detailed_content }}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="meta_title" style="display: block; margin-bottom: 8px; font-weight: 600;">SEO Meta Title</label>
+                <input type="text" id="meta_title" name="meta_title" value="{{ service.meta_title|default:'' }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="meta_description" style="display: block; margin-bottom: 8px; font-weight: 600;">SEO Meta Description</label>
+                <input type="text" id="meta_description" name="meta_description" value="{{ service.meta_description|default:'' }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+        </div>
+
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
             <div>

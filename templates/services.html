@@ -22,11 +22,11 @@
                     <i class="{{ service.icon_class|default:'fas fa-broom' }}" style="font-size: 4rem; color: var(--primary-color);"></i>
                 </div>
                 <div style="padding: 30px; flex-grow: 1;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-dark);">{{ service.title }}</h3>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-dark);"><a href="{% url 'service_detail' service.slug %}" style="text-decoration: none; color: inherit;">{{ service.title }}</a></h3>
                     <p style="line-height: 1.7;">{{ service.description }}</p>
                 </div>
                 <div style="padding: 0 30px 30px;">
-                    <a href="{% url 'contact' %}?service={{ service.title|urlencode }}" class="btn btn-primary" style="width: 100%;">Request this Service</a>
+                    <a href="{% url 'service_detail' service.slug %}" class="btn btn-primary" style="width: 100%;">View Services Details</a>
                 </div>
             </div>
             {% empty %}

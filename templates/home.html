@@ -31,9 +31,9 @@
                 <div class="icon" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;">
                     <i class="{{ service.icon_class|default:'fas fa-broom' }}"></i>
                 </div>
-                <h3>{{ service.title }}</h3>
+                <h3><a href="{% url 'service_detail' service.slug %}" style="color: inherit; text-decoration: none;">{{ service.title }}</a></h3>
                 <p>{{ service.description|truncatewords:20 }}</p>
-                <a href="{% url 'services' %}" style="color: var(--primary-color); font-weight: 600;">Learn More &rarr;</a>
+                <a href="{% url 'service_detail' service.slug %}" style="color: var(--primary-color); font-weight: 600;">Learn More &rarr;</a>
             </div>
             {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;" data-aos="fade-up">Services coming soon.</p>

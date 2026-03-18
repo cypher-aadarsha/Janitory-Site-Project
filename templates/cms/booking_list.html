@@ -1,0 +1,59 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}Bookings & Scheduling{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <p style="color: #7f8c8d;">Review and manage scheduled cleaning appointments.</p>
+    
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'cms_bookings' %}" class="btn {% if not current_filter %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 5px 15px; background: {% if not current_filter %}var(--cms-primary){% else %}#f1f2f6{% endif %}; color: {% if not current_filter %}white{% else %}#7f8c8d{% endif %};">All</a>
+        <a href="{% url 'cms_bookings' %}?status=PENDING" class="btn {% if current_filter == 'PENDING' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 5px 15px; background: {% if current_filter == 'PENDING' %}var(--cms-primary){% else %}#f1f2f6{% endif %}; color: {% if current_filter == 'PENDING' %}white{% else %}#7f8c8d{% endif %};">Pending</a>
+        <a href="{% url 'cms_bookings' %}?status=CONFIRMED" class="btn {% if current_filter == 'CONFIRMED' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 5px 15px; background: {% if current_filter == 'CONFIRMED' %}#27ae60{% else %}#f1f2f6{% endif %}; color: {% if current_filter == 'CONFIRMED' %}white{% else %}#7f8c8d{% endif %};">Confirmed</a>
+    </div>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Scheduled For</th>
+                <th>Client</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td style="color: var(--cms-primary); font-weight: 600;">{{ booking.preferred_date|date:"l, M j" }}<br><span style="font-size: 0.85rem; color: #7f8c8d; font-weight: normal;">at {{ booking.preferred_time|time:"g:i A" }}</span></td>
+                <td>
+                    <div style="font-weight: 500;">{{ booking.name }}</div>
+                    <div style="font-size: 0.85rem; color: #7f8c8d;">{{ booking.phone }}</div>
+                </td>
+                <td>{{ booking.service.title|default:"N/A" }}</td>
+                <td>
+                    {% if booking.status == 'PENDING' %}
+                        <span style="background: #fff3e0; color: #e65100; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;"><i class="fas fa-clock"></i> Pending</span>
+                    {% elif booking.status == 'CONFIRMED' %}
+                        <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;"><i class="fas fa-calendar-check"></i> Confirmed</span>
+                    {% elif booking.status == 'COMPLETED' %}
+                        <span style="background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;"><i class="fas fa-check-circle"></i> Completed</span>
+                    {% else %}
+                        <span style="background: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;"><i class="fas fa-times-circle"></i> Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'cms_booking_view' booking.pk %}" class="btn" style="background: #f1f2f6; color: var(--cms-primary); padding: 5px 10px;"><i class="fas fa-edit"></i> Manage</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">No bookings found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

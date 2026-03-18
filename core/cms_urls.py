@@ -29,4 +29,9 @@ urlpatterns = [
     
     # Site Settings
     path('settings/', cms_views.cms_site_settings, name='cms_site_settings'),
+    
+    # Bookings (CRM)
+    path('bookings/', cms_views.cms_bookings, name='cms_bookings'),
+    path('bookings/<int:pk>/', cms_views.cms_booking_view, name='cms_booking_view'),
+    path('bookings/<int:pk>/delete/', cms_views.cms_booking_delete, name='cms_booking_delete'),
 ]

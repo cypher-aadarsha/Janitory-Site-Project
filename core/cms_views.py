@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting
+from django.utils.text import slugify
+from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking
 
 def is_staff_or_admin(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
@@ -37,7 +38,18 @@ def cms_service_edit(request, pk=None):
     if request.method == 'POST':
         service.title = request.POST.get('title')
         service.description = request.POST.get('description')
-        service.icon_class = request.POST.get('icon_class')
+        service.detailed_content = request.POST.get('detailed_content', '')
+        service.meta_title = request.POST.get('meta_title', '')
+        service.meta_description = request.POST.get('meta_description', '')
+        
+        # Auto-generate slug if empty
+        slug = request.POST.get('slug', '')
+        if not slug and service.title:
+            service.slug = slugify(service.title)
+        else:
+            service.slug = slugify(slug)
+            
+        service.icon_class = request.POST.get('icon_class', '')
         service.order = request.POST.get('order') or 0
         service.is_active = request.POST.get('is_active') == 'on'
         
@@ -77,7 +89,18 @@ def cms_service_area_edit(request, pk=None):
         
     if request.method == 'POST':
         area.city = request.POST.get('city')
-        area.description = request.POST.get('description')
+        area.description = request.POST.get('description', '')
+        area.detailed_content = request.POST.get('detailed_content', '')
+        area.meta_title = request.POST.get('meta_title', '')
+        area.meta_description = request.POST.get('meta_description', '')
+        
+        # Auto-generate slug if empty
+        slug = request.POST.get('slug', '')
+        if not slug and area.city:
+            area.slug = slugify(area.city)
+        else:
+            area.slug = slugify(slug)
+            
         area.is_active = request.POST.get('is_active') == 'on'
         area.save()
         messages.success(request, f"Service Area '{area.city}' has been successfully saved.")
@@ -175,3 +198,42 @@ def cms_site_settings(request):
         return redirect('cms_site_settings')
         
     return render(request, 'cms/site_settings_form.html', {'settings': settings_obj})
+
+# --- Booking Management (CRM) ---
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_bookings(request):
+    # Optional filtering by status
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        bookings = Booking.objects.filter(status=status_filter)
+    else:
+        bookings = Booking.objects.all()
+        
+    return render(request, 'cms/booking_list.html', {
+        'bookings': bookings,
+        'current_filter': status_filter
+    })
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_booking_view(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(Booking.STATUS_CHOICES):
+            booking.status = new_status
+            booking.save()
+            messages.success(request, f"Booking status updated to {booking.get_status_display()}.")
+            return redirect('cms_booking_view', pk=booking.pk)
+            
+    return render(request, 'cms/booking_detail.html', {'booking': booking})
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_booking_delete(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if request.method == 'POST':
+        name = booking.name
+        booking.delete()
+        messages.success(request, f"Booking for '{name}' has been deleted.")
+        return redirect('cms_bookings')
+    return render(request, 'cms/confirm_delete.html', {'object': booking, 'cancel_url': 'cms_bookings'})
