@@ -17,6 +17,42 @@
     </div>
 </section>
 
+<!-- Trust Signals (Logos) -->
+<section class="trust-logos" style="padding: 40px 0; background: white; border-bottom: 1px solid #eee;">
+    <div class="container text-center">
+        <p style="text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 20px; font-weight: 600; font-size: 0.9rem;">Trusted By Industry Leaders Across California</p>
+        <div style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; opacity: 0.5; align-items: center;">
+            <i class="fab fa-amazon" style="font-size: 2.5rem;"></i>
+            <i class="fab fa-google" style="font-size: 2.5rem;"></i>
+            <i class="fab fa-microsoft" style="font-size: 2.5rem;"></i>
+            <i class="fab fa-apple" style="font-size: 2.5rem;"></i>
+            <i class="fab fa-salesforce" style="font-size: 2.5rem;"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Counters -->
+<section class="counters" style="padding: 60px 0; background: var(--primary-color); color: white;">
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center;">
+        <div data-aos="fade-up" data-aos-delay="100">
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_years|default:25 }}">0</span>+</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Years of Excellence</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="200">
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_clients|default:1500 }}">0</span>+</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Facilities Maintained</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="300">
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_sqft|default:50 }}">0</span>M</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sq. Ft. Serviced Daily</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="400">
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_retention|default:99 }}">0</span>%</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Client Retention</p>
+        </div>
+    </div>
+</section>
+
 <!-- Services Overview -->
 <section class="section" style="padding: 80px 0; background-color: var(--bg-light);">
     <div class="container">
@@ -69,6 +105,27 @@
     </div>
 </section>
 
+<!-- Tech & Strategy Highlights -->
+<section class="tech-highlights" style="padding: 80px 0; background: white;">
+    <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; gap: 50px;">
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+            <div style="background: var(--bg-light); border-radius: 20px; padding: 40px; border-left: 5px solid var(--primary-color);">
+                <i class="fas fa-satellite-dish" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+                <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Smart Cleaning Technology</h3>
+                <p style="line-height: 1.8;">Our proprietary QA systems provide real-time reporting, ensuring 100% accountability. Using advanced scheduling and supply tracking via our client portal, we deliver precise results without the guesswork.</p>
+                <a href="{% url 'quality' %}" class="btn btn-secondary" style="margin-top: 20px;">Discover Our Tech &rarr;</a>
+            </div>
+        </div>
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-left">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 20px;">Beyond Responsive to <span style="color: var(--primary-color);">Visionary</span></h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 20px;">
+                We don't just clean; we optimize your facility's operational efficiency. Our data-driven approach means fewer emergencies, enhanced sustainability, and a healthier environment for your workforce.
+            </p>
+            <a href="{% url 'sustainability' %}" style="color: var(--primary-dark); font-weight: 600; text-decoration: underline;">Learn about our Green Cleaning Initiatives</a>
+        </div>
+    </div>
+</section>
+
 <!-- Testimonials Overview -->
 <section class="section" style="padding: 80px 0; background-color: var(--primary-dark); color: white;">
     <div class="container">
@@ -104,4 +161,55 @@
     </div>
 </section>
 
+<!-- Careers CTA -->
+<section class="careers-cta" style="padding: 80px 0; background: linear-gradient(135deg, var(--primary-dark) 0%, #1a365d 100%); color: white;">
+    <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
+        <div style="flex: 2; min-width: 300px;" data-aos="fade-right">
+            <h2 style="font-size: 2.5rem; margin-bottom: 15px;">Build a Career With Purpose</h2>
+            <p style="font-size: 1.1rem; opacity: 0.9; max-width: 600px;">We're always looking for dedicated professionals to join our growing team. We offer competitive benefits, continuous training, and pathways for advancement.</p>
+        </div>
+        <div style="flex: 1; text-align: right; min-width: 200px;" data-aos="fade-left">
+            <a href="{% url 'careers' %}" class="btn" style="background: white; color: var(--primary-dark); padding: 15px 40px; font-size: 1.1rem; font-weight: 600; border-radius: 5px; text-transform: uppercase;">Apply Now</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; 
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 15);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            
+            // Trigger animation when scrolled into view
+            const observer = new IntersectionObserver(entries => {
+                if(entries[0].isIntersecting) {
+                    updateCount();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(counter);
+        });
+    };
+    
+    // Slight delay to ensure AOS finishes initial setup
+    setTimeout(animateCounters, 500);
+});
+</script>
 {% endblock %}

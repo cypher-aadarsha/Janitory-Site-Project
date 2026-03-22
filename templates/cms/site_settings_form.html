@@ -37,6 +37,10 @@
                 <label for="whatsapp_number" style="display: block; margin-bottom: 8px; font-weight: 600;">WhatsApp Number</label>
                 <input type="text" id="whatsapp_number" name="whatsapp_number" value="{{ settings.whatsapp_number }}" placeholder="e.g., 1234567890" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
             </div>
+            <div>
+                <label for="google_review_link" style="display: block; margin-bottom: 8px; font-weight: 600;">Google Review Link</label>
+                <input type="url" id="google_review_link" name="google_review_link" value="{{ settings.google_review_link|default:'' }}" placeholder="https://g.page/r/..." style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
         </div>
 
         <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">Home Page Hero</h3>
@@ -58,6 +62,26 @@
             <div>
                 <label for="instagram_url" style="display: block; margin-bottom: 8px; font-weight: 600;">Instagram URL</label>
                 <input type="url" id="instagram_url" name="instagram_url" value="{{ settings.instagram_url }}" placeholder="https://instagram.com/..." style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+        </div>
+        <h3 style="margin-bottom: 20px; color: var(--cms-primary); border-bottom: 1px solid var(--cms-border); padding-bottom: 10px;">Dynamic Stats Counters</h3>
+        <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">These numbers power the animated counter section on the homepage.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div>
+                <label for="stat_years" style="display: block; margin-bottom: 8px; font-weight: 600;">Years of Excellence</label>
+                <input type="number" id="stat_years" name="stat_years" value="{{ settings.stat_years }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="stat_clients" style="display: block; margin-bottom: 8px; font-weight: 600;">Facilities Maintained</label>
+                <input type="number" id="stat_clients" name="stat_clients" value="{{ settings.stat_clients }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="stat_sqft" style="display: block; margin-bottom: 8px; font-weight: 600;">Sq. Ft. Serviced (Millions)</label>
+                <input type="number" id="stat_sqft" name="stat_sqft" value="{{ settings.stat_sqft }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+            </div>
+            <div>
+                <label for="stat_retention" style="display: block; margin-bottom: 8px; font-weight: 600;">Client Retention %</label>
+                <input type="number" id="stat_retention" name="stat_retention" value="{{ settings.stat_retention }}" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
             </div>
         </div>
         

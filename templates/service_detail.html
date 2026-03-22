@@ -19,7 +19,7 @@
                 
                 {% if service.detailed_content %}
                     <div class="service-content" style="font-size: 1.1rem; line-height: 1.8; color: #444;">
-                        {{ service.detailed_content|safe|linebreaks }}
+                        {{ service.detailed_content|safe }}
                     </div>
                 {% else %}
                     <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">{{ service.description|linebreaks }}</p>

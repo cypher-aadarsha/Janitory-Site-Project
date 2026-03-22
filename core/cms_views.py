@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils.text import slugify
-from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking
+from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 
 def is_staff_or_admin(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
@@ -11,12 +11,28 @@ def is_staff_or_admin(user):
 def dashboard_home(request):
     total_services = Service.objects.count()
     total_inquiries = Inquiry.objects.count()
-    recent_inquiries = Inquiry.objects.all().order_by('-created_at')[:5]
+    total_bookings = Booking.objects.count()
+    total_applications = JobApplication.objects.count()
     
+    # Recent activity
+    recent_inquiries = Inquiry.objects.all().order_by('-created_at')[:5]
+    recent_bookings = Booking.objects.all().order_by('-created_at')[:5]
+    
+    # Aggregations for charts
+    from django.db.models import Count
+    bookings_by_status = list(Booking.objects.values('status').annotate(count=Count('id')))
+    apps_by_status = list(JobApplication.objects.values('status').annotate(count=Count('id')))
+    
+    import json
     context = {
         'total_services': total_services,
         'total_inquiries': total_inquiries,
+        'total_bookings': total_bookings,
+        'total_applications': total_applications,
         'recent_inquiries': recent_inquiries,
+        'recent_bookings': recent_bookings,
+        'bookings_by_status_json': json.dumps(bookings_by_status),
+        'apps_by_status_json': json.dumps(apps_by_status),
     }
     return render(request, 'cms/dashboard.html', context)
 
@@ -188,10 +204,20 @@ def cms_site_settings(request):
         settings_obj.contact_phone = request.POST.get('contact_phone')
         settings_obj.address = request.POST.get('address')
         settings_obj.whatsapp_number = request.POST.get('whatsapp_number')
-        settings_obj.hero_title = request.POST.get('hero_title')
-        settings_obj.hero_subtitle = request.POST.get('hero_subtitle')
-        settings_obj.facebook_url = request.POST.get('facebook_url')
-        settings_obj.instagram_url = request.POST.get('instagram_url')
+        settings_obj.hero_title = request.POST.get('hero_title', '')
+        settings_obj.hero_subtitle = request.POST.get('hero_subtitle', '')
+        settings_obj.google_review_link = request.POST.get('google_review_link', '')
+        settings_obj.facebook_url = request.POST.get('facebook_url', '')
+        settings_obj.instagram_url = request.POST.get('instagram_url', '')
+
+        # Process dynamic stats counters (with fallback defaults if empty or invalid)
+        try:
+            settings_obj.stat_years = int(request.POST.get('stat_years', 25))
+            settings_obj.stat_clients = int(request.POST.get('stat_clients', 1500))
+            settings_obj.stat_sqft = int(request.POST.get('stat_sqft', 50))
+            settings_obj.stat_retention = int(request.POST.get('stat_retention', 99))
+        except ValueError:
+            pass
         
         settings_obj.save()
         messages.success(request, "Global site settings have been updated successfully.")
@@ -218,15 +244,25 @@ def cms_bookings(request):
 def cms_booking_view(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     
+    # Grab the site settings to pass to context for the Google Review link
+    site_settings = SiteSetting.objects.first()
+    
     if request.method == 'POST':
         new_status = request.POST.get('status')
         if new_status in dict(Booking.STATUS_CHOICES):
             booking.status = new_status
-            booking.save()
-            messages.success(request, f"Booking status updated to {booking.get_status_display()}.")
-            return redirect('cms_booking_view', pk=booking.pk)
             
-    return render(request, 'cms/booking_detail.html', {'booking': booking})
+        booking.is_repeat_customer = request.POST.get('is_repeat_customer') == 'on'
+        try:
+            booking.lifetime_value = float(request.POST.get('lifetime_value', 0.00))
+        except ValueError:
+            pass
+            
+        booking.save()
+        messages.success(request, f"CRM Profile for '{booking.name}' has been updated.")
+        return redirect('cms_booking_view', pk=booking.pk)
+            
+    return render(request, 'cms/booking_detail.html', {'booking': booking, 'site_settings': site_settings})
 
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
 def cms_booking_delete(request, pk):
@@ -237,3 +273,84 @@ def cms_booking_delete(request, pk):
         messages.success(request, f"Booking for '{name}' has been deleted.")
         return redirect('cms_bookings')
     return render(request, 'cms/confirm_delete.html', {'object': booking, 'cancel_url': 'cms_bookings'})
+
+# --- Job Applications Management (Careers) ---
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_job_applications(request):
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        applications = JobApplication.objects.filter(status=status_filter)
+    else:
+        applications = JobApplication.objects.all()
+        
+    return render(request, 'cms/job_application_list.html', {
+        'applications': applications,
+        'current_filter': status_filter
+    })
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_job_application_view(request, pk):
+    application = get_object_or_404(JobApplication, pk=pk)
+    
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(JobApplication.STATUS_CHOICES):
+            application.status = new_status
+            application.save()
+            messages.success(request, f"Application status updated to {application.get_status_display()}.")
+            return redirect('cms_job_application_view', pk=application.pk)
+            
+    return render(request, 'cms/job_application_detail.html', {'application': application})
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_job_application_delete(request, pk):
+    application = get_object_or_404(JobApplication, pk=pk)
+    if request.method == 'POST':
+        name = application.name
+        application.delete()
+        messages.success(request, f"Application from '{name}' has been deleted.")
+        return redirect('cms_job_applications')
+    return render(request, 'cms/confirm_delete.html', {'object': application, 'cancel_url': 'cms_job_applications'})
+
+# --- Gallery Management ---
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_galleries(request):
+    from .models import GalleryImage
+    galleries = GalleryImage.objects.all().order_by('-created_at')
+    return render(request, 'cms/gallery_list.html', {'galleries': galleries})
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_gallery_edit(request, pk=None):
+    from .models import GalleryImage
+    if pk:
+        gallery = get_object_or_404(GalleryImage, pk=pk)
+        action = "Edit"
+    else:
+        gallery = GalleryImage()
+        action = "Add"
+        
+    if request.method == 'POST':
+        gallery.title = request.POST.get('title')
+        gallery.description = request.POST.get('description', '')
+        
+        if 'before_image' in request.FILES:
+            gallery.before_image = request.FILES['before_image']
+        if 'after_image' in request.FILES:
+            gallery.after_image = request.FILES['after_image']
+            
+        gallery.save()
+        messages.success(request, f"Gallery Image '{gallery.title}' has been successfully saved.")
+        return redirect('cms_galleries')
+        
+    return render(request, 'cms/gallery_form.html', {'gallery': gallery, 'action': action})
+
+@user_passes_test(is_staff_or_admin, login_url='/admin/login/')
+def cms_gallery_delete(request, pk):
+    from .models import GalleryImage
+    gallery = get_object_or_404(GalleryImage, pk=pk)
+    if request.method == 'POST':
+        title = gallery.title
+        gallery.delete()
+        messages.success(request, f"Gallery Image '{title}' has been deleted.")
+        return redirect('cms_galleries')
+    return render(request, 'cms/confirm_delete.html', {'object': gallery, 'cancel_url': 'cms_galleries'})

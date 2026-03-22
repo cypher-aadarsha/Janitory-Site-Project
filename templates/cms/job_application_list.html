@@ -1,0 +1,61 @@
+{% extends 'cms/base_cms.html' %}
+{% block title %}Job Applications{% endblock %}
+{% block page_title %}Job Applications{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <h3>Incoming Applications</h3>
+        <div>
+            <form method="GET" style="display: flex; gap: 10px;">
+                <select name="status" class="btn" style="border: 1px solid var(--cms-border); background: white;">
+                    <option value="">All Statuses</option>
+                    <option value="NEW" {% if current_filter == 'NEW' %}selected{% endif %}>New</option>
+                    <option value="REVIEWING" {% if current_filter == 'REVIEWING' %}selected{% endif %}>Reviewing</option>
+                    <option value="INTERVIEWED" {% if current_filter == 'INTERVIEWED' %}selected{% endif %}>Interviewed</option>
+                    <option value="REJECTED" {% if current_filter == 'REJECTED' %}selected{% endif %}>Rejected</option>
+                    <option value="HIRED" {% if current_filter == 'HIRED' %}selected{% endif %}>Hired</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.created_at|date:"M d, Y" }}</td>
+                <td><strong>{{ app.name }}</strong><br><small><a href="mailto:{{ app.email }}">{{ app.email }}</a></small></td>
+                <td>{{ app.position }}</td>
+                <td>
+                    <span style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+                    {% if app.status == 'NEW' %}background: #e3f2fd; color: #1565c0;
+                    {% elif app.status == 'REVIEWING' %}background: #fff3cd; color: #856404;
+                    {% elif app.status == 'INTERVIEWED' %}background: #d1ecf1; color: #0c5460;
+                    {% elif app.status == 'HIRED' %}background: #d4edda; color: #155724;
+                    {% else %}background: #f8d7da; color: #721c24;{% endif %}">
+                        {{ app.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'cms_job_application_view' app.pk %}" class="btn" style="background: #e0e0e0; color: #333; padding: 5px 10px; font-size: 0.9rem;"><i class="fas fa-eye"></i> View</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px;">No applications found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

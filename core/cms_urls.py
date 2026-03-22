@@ -34,4 +34,15 @@ urlpatterns = [
     path('bookings/', cms_views.cms_bookings, name='cms_bookings'),
     path('bookings/<int:pk>/', cms_views.cms_booking_view, name='cms_booking_view'),
     path('bookings/<int:pk>/delete/', cms_views.cms_booking_delete, name='cms_booking_delete'),
+    
+    # Job Applications (Careers)
+    path('job-applications/', cms_views.cms_job_applications, name='cms_job_applications'),
+    path('job-applications/<int:pk>/', cms_views.cms_job_application_view, name='cms_job_application_view'),
+    path('job-applications/<int:pk>/delete/', cms_views.cms_job_application_delete, name='cms_job_application_delete'),
+    
+    # Gallery Before/After
+    path('galleries/', cms_views.cms_galleries, name='cms_galleries'),
+    path('galleries/add/', cms_views.cms_gallery_edit, name='cms_gallery_add'),
+    path('galleries/<int:pk>/edit/', cms_views.cms_gallery_edit, name='cms_gallery_edit'),
+    path('galleries/<int:pk>/delete/', cms_views.cms_gallery_delete, name='cms_gallery_delete'),
 ]

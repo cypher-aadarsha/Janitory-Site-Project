@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Careers & Employment{% endblock %}
+{% block content %}
+{% load static %}
+<section class="page-header" style="background: linear-gradient(rgba(11, 37, 89, 0.8), rgba(11, 37, 89, 0.8)), url('{% static "images/Healthcare_ServiceMaster Clean Office Clean 078.jpg" %}') center/cover; padding: 120px 0; color: white; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Join Our Team</h1>
+        <p class="lead" style="font-size: 1.3rem; max-width: 800px; margin: auto;">Build a rewarding career with industry leaders.</p>
+    </div>
+</section>
+
+<section class="py-5" style="padding: 80px 0; background-color: var(--bg-light);">
+    <div class="container" style="display: flex; flex-wrap: wrap; gap: 50px;">
+        <!-- Info Column -->
+        <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+            <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 20px;">Why Work With Us?</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 30px;">
+                We are always seeking dedicated, detail-oriented individuals who take pride in creating clean, safe, and healthy environments. We offer competitive pay, comprehensive benefits, and clear pathways for advancement within our organization.
+            </p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-hand-holding-medical" style="color: var(--primary-color); font-size: 1.5rem; margin-right: 15px; width: 30px;"></i> <strong>Health & Dental Benefits</strong></li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-graduation-cap" style="color: var(--primary-color); font-size: 1.5rem; margin-right: 15px; width: 30px;"></i> <strong>Paid Training Programs</strong></li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-calendar-alt" style="color: var(--primary-color); font-size: 1.5rem; margin-right: 15px; width: 30px;"></i> <strong>Flexible Scheduling</strong></li>
+                <li style="margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-chart-line" style="color: var(--primary-color); font-size: 1.5rem; margin-right: 15px; width: 30px;"></i> <strong>Career Upward Mobility</strong></li>
+            </ul>
+        </div>
+        
+        <!-- Application Form Column -->
+        <div style="flex: 1.5; min-width: 350px;" data-aos="fade-left">
+            <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: var(--shadow);">
+                <h3 style="font-size: 1.8rem; margin-bottom: 20px; color: var(--primary-dark);">Online Application</h3>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                            <i class="fas fa-check-circle" style="margin-right: 10px;"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="POST" action="{% url 'careers' %}">
+                    {% csrf_token %}
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600;">Full Name *</label>
+                            <input type="text" id="name" name="name" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                        </div>
+                        <div>
+                            <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 600;">Phone Number *</label>
+                            <input type="text" id="phone" name="phone" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="email" style="display: block; margin-bottom: 8px; font-weight: 600;">Email Address *</label>
+                        <input type="email" id="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label for="position" style="display: block; margin-bottom: 8px; font-weight: 600;">Position Applying For *</label>
+                        <select id="position" name="position" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; background-color: white;">
+                            <option value="">-- Select Position --</option>
+                            <option value="Janitorial Staff">Janitorial Staff</option>
+                            <option value="Day Porter">Day Porter</option>
+                            <option value="Specialized Floor Technician">Specialized Floor Technician</option>
+                            <option value="Area Supervisor">Area Supervisor</option>
+                            <option value="Facility Manager">Facility Manager</option>
+                            <option value="Administrative Support">Administrative Support</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label for="resume_link" style="display: block; margin-bottom: 8px; font-weight: 600;">Link to Resume / LinkedIn Profile (Optional)</label>
+                        <input type="url" id="resume_link" name="resume_link" placeholder="https://" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="cover_letter" style="display: block; margin-bottom: 8px; font-weight: 600;">Cover Letter / Experience Summary</label>
+                        <textarea id="cover_letter" name="cover_letter" rows="5" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; resize: vertical;" placeholder="Tell us briefly about your relevant experience..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">Submit Application <i class="fas fa-paper-plane" style="margin-left: 8px;"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

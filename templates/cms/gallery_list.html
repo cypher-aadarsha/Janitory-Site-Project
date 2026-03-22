@@ -1,0 +1,57 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}Before/After Gallery{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <p style="color: #7f8c8d;">Create and manage before and after visual case studies.</p>
+    <a href="{% url 'cms_gallery_add' %}" class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-plus"></i> Add Case Study</a>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Preview</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Added</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gl in galleries %}
+            <tr>
+                <td style="width: 150px;">
+                    <div style="display: flex; gap: 5px;">
+                        {% if gl.before_image %}
+                            <img src="{{ gl.before_image.url }}" alt="Before" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                        {% else %}
+                            <div style="width: 60px; height: 60px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #999;">No IMG</div>
+                        {% endif %}
+                        {% if gl.after_image %}
+                            <img src="{{ gl.after_image.url }}" alt="After" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                        {% else %}
+                            <div style="width: 60px; height: 60px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #999;">No IMG</div>
+                        {% endif %}
+                    </div>
+                </td>
+                <td style="font-weight: 500; color: var(--cms-primary);">{{ gl.title }}</td>
+                <td>{{ gl.description|truncatewords:15 }}</td>
+                <td style="color: #7f8c8d; font-size: 0.9rem;">{{ gl.created_at|date:"M j, Y" }}</td>
+                <td>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="{% url 'cms_gallery_edit' gl.pk %}" class="btn" style="background: #f1f2f6; color: var(--cms-primary); padding: 5px 10px;"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="{% url 'cms_gallery_delete' gl.pk %}" class="btn" style="background: #ffebee; color: #c62828; padding: 5px 10px;"><i class="fas fa-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">No gallery case studies found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

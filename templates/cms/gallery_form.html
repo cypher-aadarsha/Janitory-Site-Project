@@ -1,0 +1,54 @@
+{% extends 'cms/base_cms.html' %}
+
+{% block page_title %}{{ action }} Gallery Case Study{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'cms_galleries' %}" style="color: #7f8c8d; text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Gallery</a>
+</div>
+
+<div class="card" style="max-width: 800px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label for="title" style="display: block; margin-bottom: 8px; font-weight: 600;">Title *</label>
+            <input type="text" id="title" name="title" value="{{ gallery.title }}" required style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="description" style="display: block; margin-bottom: 8px; font-weight: 600;">Short Description</label>
+            <textarea id="description" name="description" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--cms-border); border-radius: 5px; font-size: 1rem; resize: vertical;">{{ gallery.description }}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; border-left: 4px solid #e74c3c;">
+                <label for="before_image" style="display: block; margin-bottom: 10px; font-weight: 600;">Before Image *</label>
+                {% if gallery.before_image %}
+                    <div style="margin-bottom: 15px;">
+                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Current Image:</p>
+                        <img src="{{ gallery.before_image.url }}" alt="Before" style="max-width: 100%; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                {% endif %}
+                <input type="file" id="before_image" name="before_image" {% if not gallery.pk %}required{% endif %} style="width: 100%;">
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; border-left: 4px solid #2ecc71;">
+                <label for="after_image" style="display: block; margin-bottom: 10px; font-weight: 600;">After Image *</label>
+                {% if gallery.after_image %}
+                    <div style="margin-bottom: 15px;">
+                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Current Image:</p>
+                        <img src="{{ gallery.after_image.url }}" alt="After" style="max-width: 100%; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                {% endif %}
+                <input type="file" id="after_image" name="after_image" {% if not gallery.pk %}required{% endif %} style="width: 100%;">
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; display: flex; justify-content: flex-end;">
+            <a href="{% url 'cms_galleries' %}" class="btn" style="color: #7f8c8d; margin-right: 15px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;"><i class="fas fa-save"></i> Save Gallery Item</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

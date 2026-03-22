@@ -60,6 +60,8 @@
             <li><a href="{% url 'cms_testimonials' %}" class="{% if 'cms_testimonial' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-star"></i> Testimonials</a></li>
             <li><a href="{% url 'cms_inquiries' %}" class="{% if 'cms_inquiry' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-envelope"></i> Inquiries</a></li>
             <li><a href="{% url 'cms_bookings' %}" class="{% if 'cms_booking' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-calendar-alt"></i> Bookings (CRM)</a></li>
+            <li><a href="{% url 'cms_job_applications' %}" class="{% if 'cms_job_application' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-briefcase"></i> Job Applications</a></li>
+            <li><a href="{% url 'cms_galleries' %}" class="{% if 'cms_galler' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-images"></i> Gallery (Before/After)</a></li>
             <li><a href="{% url 'cms_site_settings' %}" class="{% if 'cms_site_settings' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-cog"></i> Site Settings</a></li>
         </ul>
         <div style="padding: 20px;">
@@ -90,5 +92,16 @@
         </div>
     </main>
 
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea.wysiwyg',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            height: 400,
+            menubar: false,
+            branding: false
+        });
+    </script>
 </body>
 </html>

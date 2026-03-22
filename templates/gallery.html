@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Before & After Gallery | Our Work{% endblock %}
+{% block meta_description %}See the difference our professional cleaning services make. Browse our before and after gallery of commercial and residential cleaning projects.{% endblock %}
+
+{% block content %}
+<section class="page-header" style="background: linear-gradient(rgba(11, 37, 89, 0.8), rgba(11, 37, 89, 0.8)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; padding: 120px 0; color: white; text-align: center;">
+    <div class="container" data-aos="fade-up">
+        <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Before & After Gallery</h1>
+        <p class="lead" style="font-size: 1.3rem; max-width: 800px; margin: auto;">Seeing is believing. Browse our portfolio of successful cleaning transformations.</p>
+    </div>
+</section>
+
+<section style="padding: 80px 0; background-color: var(--bg-light); min-height: 50vh;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 40px;">
+            {% for gallery in galleries %}
+            <div class="card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                
+                <!-- Image Comparison Split -->
+                <div style="display: flex; height: 250px;">
+                    <div style="flex: 1; position: relative; border-right: 2px solid white;">
+                        {% if gallery.before_image %}
+                            <img src="{{ gallery.before_image.url }}" alt="Before" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <div style="width:100%; height:100%; background:#eee; display:flex; align-items:center; justify-content:center; color:#999;">No Image</div>
+                        {% endif %}
+                        <span style="position: absolute; bottom: 10px; left: 10px; background: rgba(231, 76, 60, 0.9); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Before</span>
+                    </div>
+                    <div style="flex: 1; position: relative;">
+                        {% if gallery.after_image %}
+                            <img src="{{ gallery.after_image.url }}" alt="After" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <div style="width:100%; height:100%; background:#eee; display:flex; align-items:center; justify-content:center; color:#999;">No Image</div>
+                        {% endif %}
+                        <span style="position: absolute; bottom: 10px; right: 10px; background: rgba(46, 204, 113, 0.9); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">After</span>
+                    </div>
+                </div>
+
+                <div style="padding: 25px;">
+                    <h3 style="font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 10px;">{{ gallery.title }}</h3>
+                    {% if gallery.description %}
+                    <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;">{{ gallery.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: white; border-radius: 10px;">
+                <i class="fas fa-images" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
+                <h3 style="color: var(--primary-dark); margin-bottom: 10px;">Check back soon!</h3>
+                <p style="color: #666; margin-bottom: 0;">We are currently updating our portfolio with our latest successful projects.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- CTA -->
+        <div style="text-align: center; margin-top: 80px;" data-aos="zoom-in">
+            <h3 style="font-size: 2rem; color: var(--primary-dark); margin-bottom: 20px;">Ready for your own transformation?</h3>
+            <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 35px; border-radius: 5px;">Request a Free Quote</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking
+from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 
 def home(request):
     services = Service.objects.filter(is_active=True)[:3]
@@ -14,6 +14,31 @@ def home(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def quality(request):
+    return render(request, 'quality.html')
+
+def sustainability(request):
+    return render(request, 'sustainability.html')
+
+def careers(request):
+    if request.method == 'POST':
+        app = JobApplication(
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            position=request.POST.get('position'),
+            resume_link=request.POST.get('resume_link', ''),
+            cover_letter=request.POST.get('cover_letter', '')
+        )
+        app.save()
+        messages.success(request, "Your application has been received! Our HR team will review it shortly.")
+        return redirect('careers')
+        
+    return render(request, 'careers.html')
+
+def news(request):
+    return render(request, 'news.html')
 
 def services_page(request):
     services = Service.objects.filter(is_active=True)

@@ -29,7 +29,12 @@
             <tr>
                 <td style="color: var(--cms-primary); font-weight: 600;">{{ booking.preferred_date|date:"l, M j" }}<br><span style="font-size: 0.85rem; color: #7f8c8d; font-weight: normal;">at {{ booking.preferred_time|time:"g:i A" }}</span></td>
                 <td>
-                    <div style="font-weight: 500;">{{ booking.name }}</div>
+                    <div style="font-weight: 500;">
+                        {{ booking.name }}
+                        {% if booking.is_repeat_customer %}
+                            <i class="fas fa-star" title="Repeat Customer" style="color: #f1c40f; margin-left: 5px; font-size: 0.8rem;"></i>
+                        {% endif %}
+                    </div>
                     <div style="font-size: 0.85rem; color: #7f8c8d;">{{ booking.phone }}</div>
                 </td>
                 <td>{{ booking.service.title|default:"N/A" }}</td>

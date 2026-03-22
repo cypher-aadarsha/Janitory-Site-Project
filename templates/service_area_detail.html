@@ -19,7 +19,7 @@
                 
                 {% if area.detailed_content %}
                     <div class="area-content" style="font-size: 1.1rem; line-height: 1.8; color: #444;">
-                        {{ area.detailed_content|safe|linebreaks }}
+                        {{ area.detailed_content|safe }}
                     </div>
                 {% else %}
                     <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">{{ area.description }}</p>

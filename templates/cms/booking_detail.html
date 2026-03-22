@@ -5,7 +5,12 @@
 {% block content %}
 <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
     <a href="{% url 'cms_bookings' %}" style="color: #7f8c8d; text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Bookings</a>
-    <a href="{% url 'cms_booking_delete' booking.pk %}" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Delete Booking</a>
+    <div style="display: flex; gap: 10px;">
+        {% if booking.status == 'COMPLETED' and site_settings.google_review_link %}
+            <a href="mailto:{{ booking.email }}?subject=Thank you for choosing {{ site_settings.site_name|urlencode }}!&body=Hi {{ booking.name|urlencode }},%0D%0A%0D%0AWe hope you were thrilled with our cleaning services! If you have a moment, we would greatly appreciate it if you could leave us a quick review on Google:%0D%0A%0D%0A{{ site_settings.google_review_link|urlencode }}%0D%0A%0D%0AThank you!%0D%0A{{ site_settings.site_name|urlencode }}" class="btn" style="background: #e67e22; color: white; padding: 5px 15px; border-radius: 5px;"><i class="fab fa-google"></i> Request Google Review</a>
+        {% endif %}
+        <a href="{% url 'cms_booking_delete' booking.pk %}" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Delete Booking</a>
+    </div>
 </div>
 
 <div class="card" style="max-width: 800px;">
@@ -48,7 +53,12 @@
     </div>
     
     <!-- Client Details -->
-    <h3 style="margin-bottom: 15px; color: var(--primary-dark); font-size: 1.2rem;">Client Information</h3>
+    <h3 style="margin-bottom: 15px; color: var(--primary-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+        Client Information
+        {% if booking.is_repeat_customer %}
+            <span style="background: var(--cms-primary); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;"><i class="fas fa-star" style="color: #f1c40f;"></i> Repeat Customer</span>
+        {% endif %}
+    </h3>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
         <div>
             <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Email Address</p>
@@ -58,9 +68,13 @@
             <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Phone Number</p>
             <p style="font-weight: 500;"><a href="tel:{{ booking.phone }}" style="color: var(--cms-primary); text-decoration: none;"><i class="fas fa-phone-alt" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.phone }}</a></p>
         </div>
-        <div style="grid-column: 1 / -1;">
+        <div>
             <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Service Address</p>
             <p style="font-weight: 500;"><i class="fas fa-map-marker-alt" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.address }}</p>
+        </div>
+        <div>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Lifetime Value</p>
+            <p style="font-weight: 600; color: #27ae60;">${{ booking.lifetime_value }}</p>
         </div>
     </div>
     
@@ -74,16 +88,30 @@
     {% endif %}
 
     <!-- Status Updater Form -->
-    <h3 style="margin-bottom: 15px; color: var(--primary-dark); font-size: 1.2rem; border-top: 1px solid var(--cms-border); padding-top: 20px;">Update Booking Status</h3>
-    <form method="post" style="background: #f8f9fa; padding: 20px; border-radius: 5px; display: flex; align-items: center; gap: 15px;">
+    <h3 style="margin-bottom: 15px; color: var(--primary-dark); font-size: 1.2rem; border-top: 1px solid var(--cms-border); padding-top: 20px;">Update CRM Profile</h3>
+    <form method="post" style="background: #f8f9fa; padding: 20px; border-radius: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end;">
         {% csrf_token %}
-        <select name="status" style="padding: 10px; border: 1px solid var(--cms-border); border-radius: 4px; font-size: 1rem; width: 250px;">
-            <option value="PENDING" {% if booking.status == 'PENDING' %}selected{% endif %}>Pending</option>
-            <option value="CONFIRMED" {% if booking.status == 'CONFIRMED' %}selected{% endif %}>Confirmed</option>
-            <option value="COMPLETED" {% if booking.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
-            <option value="CANCELLED" {% if booking.status == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
-        </select>
-        <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Update Status</button>
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Booking Status</label>
+            <select name="status" style="padding: 10px; border: 1px solid var(--cms-border); border-radius: 4px; font-size: 1rem; width: 100%;">
+                <option value="NEW" {% if booking.status == 'NEW' %}selected{% endif %}>New</option>
+                <option value="PENDING" {% if booking.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                <option value="CONFIRMED" {% if booking.status == 'CONFIRMED' %}selected{% endif %}>Confirmed</option>
+                <option value="COMPLETED" {% if booking.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                <option value="CANCELLED" {% if booking.status == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Lifetime Value ($)</label>
+            <input type="number" step="0.01" name="lifetime_value" value="{{ booking.lifetime_value }}" style="padding: 10px; border: 1px solid var(--cms-border); border-radius: 4px; font-size: 1rem; width: 100%;">
+        </div>
+        <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
+                <input type="checkbox" name="is_repeat_customer" {% if booking.is_repeat_customer %}checked{% endif %} style="width: 18px; height: 18px;">
+                Mark as Repeat Customer (VIP)
+            </label>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Save CRM Profile</button>
+        </div>
     </form>
 </div>
 {% endblock %}

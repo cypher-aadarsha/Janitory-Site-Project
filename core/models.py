@@ -82,32 +82,81 @@ class Booking(models.Model):
     preferred_date = models.DateField()
     preferred_time = models.TimeField()
     notes = models.TextField(blank=True, help_text="Any special instructions or details about the property.")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='NEW')
+    
+    # CRM Enhancements
+    is_repeat_customer = models.BooleanField(default=False)
+    lifetime_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-preferred_date', '-preferred_time']
 
     def __str__(self):
-        return f"{self.name} - {self.preferred_date} at {self.preferred_time}"
+        return f"Booking Request from {self.name} for {self.service}"
+
+
+class JobApplication(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    position = models.CharField(max_length=200)
+    resume_link = models.URLField(help_text="Link to LinkedIn, Google Drive, or Portfolio", blank=True, null=True)
+    cover_letter = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50, choices=[
+        ('NEW', 'New'),
+        ('REVIEWING', 'Reviewing'),
+        ('INTERVIEWED', 'Interviewed'),
+        ('REJECTED', 'Rejected'),
+        ('HIRED', 'Hired')
+    ], default='NEW')
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.position} Application - {self.name}"
 
 
 class SiteSetting(models.Model):
-    site_name = models.CharField(max_length=100, default="Cleaning Services")
-    contact_email = models.EmailField(default="info@cleaningservice.com")
-    contact_phone = models.CharField(max_length=20, default="123-456-7890")
-    address = models.TextField(default="California, USA")
+    site_name = models.CharField(max_length=200, default="24 Hours Facility Maintenance Inc.")
+    contact_email = models.EmailField(default="info@24hfminc.com")
+    contact_phone = models.CharField(max_length=20, default="5104096697")
+    address = models.CharField(max_length=250, default="638 Webster St. Suite 430, Oakland CA 94607")
     whatsapp_number = models.CharField(max_length=20, blank=True, help_text="Include country code, e.g., 1234567890")
+    google_review_link = models.URLField(blank=True, null=True, help_text="Link to your Google My Business review page")
     hero_title = models.CharField(max_length=200, default="Professional Cleaning Services in California")
     hero_subtitle = models.TextField(default="We provide top-notch commercial and residential cleaning.")
-    facebook_url = models.URLField(blank=True)
-    instagram_url = models.URLField(blank=True)
+    # Social Links
+    facebook_url = models.URLField(blank=True, null=True)
+    instagram_url = models.URLField(blank=True, null=True)
+
+    # Dynamic Stats Counters
+    stat_years = models.IntegerField(default=25, help_text="Years in business")
+    stat_clients = models.IntegerField(default=1500, help_text="Number of clients")
+    stat_sqft = models.IntegerField(default=50, help_text="Millions of Sq Ft serviced")
+    stat_retention = models.IntegerField(default=99, help_text="Client retention percentage")
 
     def __str__(self):
-        return "Site Settings"
+        return self.site_name
 
     def save(self, *args, **kwargs):
         # Ensure only one instance of SiteSettings exists
         if SiteSetting.objects.exists() and not self.pk:
             return
         return super().save(*args, **kwargs)
+
+class GalleryImage(models.Model):
+    title = models.CharField(max_length=150)
+    before_image = models.ImageField(upload_to='gallery/')
+    after_image = models.ImageField(upload_to='gallery/')
+    description = models.TextField(blank=True, help_text="Short description of the cleaning transformation")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
