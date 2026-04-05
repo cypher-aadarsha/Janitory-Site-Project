@@ -40,6 +40,11 @@ def careers(request):
 def news(request):
     return render(request, 'news.html')
 
+def gallery_page(request):
+    from .models import GalleryImage
+    galleries = GalleryImage.objects.all().order_by('-created_at')
+    return render(request, 'gallery.html', {'galleries': galleries})
+
 def services_page(request):
     services = Service.objects.filter(is_active=True)
     return render(request, 'services.html', {'services': services})
