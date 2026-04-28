@@ -21,8 +21,10 @@ ul { list-style: none; }
 
 /* Layout Utilities */
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-.section-padding { padding: 80px 0; }
 .text-center { text-align: center; }
+.text-white { color: var(--white) !important; }
+.section-padding { padding: 80px 0; }
+.mt-1 { margin-top: 10px; }
 
 /* Buttons */
 .btn { display: inline-block; font-weight: 600; text-align: center; padding: 12px 28px; border-radius: 6px; cursor: pointer; transition: all var(--transition-speed); font-size: 1rem; }
