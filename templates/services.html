@@ -6,14 +6,15 @@
 
 {% block content %}
 <!-- Page Header -->
-<div class="page-header" style="background-color: var(--primary-dark); color: white; padding: 80px 0; text-align: center;">
-    <div class="container" data-aos="fade-up">
-        <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">Our Services</h1>
-        <p style="font-size: 1.2rem; color: #ccc;">Customized cleaning solutions for every need</p>
+<section class="page-header" style="background: url('{% static "images/General ServiceMaster Clean Office Clean 024.jpg" %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
+        <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Our Services</h1>
+        <p class="lead" style="font-size: 1.3rem; max-width: 800px; margin: auto;">Comprehensive facility maintenance solutions.</p>
     </div>
-</div>
+</section>
 
-<section class="section" style="padding: 80px 0;">
+<section class="section-padding">
     <div class="container">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px;">
             {% for service in services %}
@@ -38,8 +39,8 @@
     </div>
 </section>
 
-<!-- Call to action block -->
-<section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; padding: 60px 0; text-align: center;">
+<!-- Call to action block<!-- CTA -->
+<section class="section-padding" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; text-align: center;">
     <div class="container" data-aos="zoom-in">
         <h2 style="color: white; margin-bottom: 20px;">Need a custom cleaning plan?</h2>
         <p style="font-size: 1.2rem; margin-bottom: 30px; color: #eee;">We can create a tailored schedule and services package that fits your exact requirements.</p>

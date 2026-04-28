@@ -6,11 +6,12 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero">
-    <div class="container" data-aos="zoom-in" data-aos-duration="1000">
+<section class="hero" style="background: url('{% static 'images/hero-bg.png' %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="zoom-in" data-aos-duration="1000">
         <h1 data-aos="fade-up" data-aos-delay="200">{{ site_settings.hero_title|default:'Professional Cleaning Services in California' }}</h1>
         <p data-aos="fade-up" data-aos-delay="400">{{ site_settings.hero_subtitle|default:'We provide top-notch commercial and residential cleaning with an emphasis on quality, trust, and reliability.' }}</p>
-        <div data-aos="zoom-in-up" data-aos-delay="600">
+        <div data-aos="zoom-in-up" data-aos-delay="600" style="margin-top: 30px;">
             <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 35px;">Get a Free Quote</a>
             <a href="tel:{{ site_settings.contact_phone|default:'123-456-7890' }}" class="btn btn-secondary" style="font-size: 1.1rem; padding: 15px 35px; margin-left: 10px;">Call Now</a>
         </div>
@@ -54,11 +55,11 @@
 </section>
 
 <!-- Services Overview -->
-<section class="section" style="padding: 80px 0; background-color: var(--bg-light);">
+<section class="section-padding" style="background-color: var(--bg-light);">
     <div class="container">
-        <div class="section-title" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
-            <h2 style="font-size: 2.5rem; color: var(--primary-dark);">Our Services</h2>
-            <p>Comprehensive cleaning solutions tailored to your needs.</p>
+        <div class="text-center" style="margin-bottom: 50px;" data-aos="fade-up">
+            <h2 style="font-size: 2.8rem; color: var(--primary-dark);">Our Services</h2>
+            <p style="font-size: 1.1rem;">Comprehensive cleaning solutions tailored to your needs.</p>
         </div>
         
         <div class="grid-services" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
@@ -82,7 +83,7 @@
 </section>
 
 <!-- Why Choose Us -->
-<section class="section" style="padding: 80px 0; overflow: hidden;">
+<section class="section-padding" style="overflow: hidden; background: var(--white);">
     <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; gap: 50px;">
         <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
             <h2 style="font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 20px;">Why Choose <span style="color: var(--primary-color);">Us?</span></h2>
@@ -106,7 +107,7 @@
 </section>
 
 <!-- Tech & Strategy Highlights -->
-<section class="tech-highlights" style="padding: 80px 0; background: white;">
+<section class="section-padding" style="background: var(--bg-light);">
     <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; gap: 50px;">
         <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
             <div style="background: var(--bg-light); border-radius: 20px; padding: 40px; border-left: 5px solid var(--primary-color);">
@@ -127,10 +128,10 @@
 </section>
 
 <!-- Testimonials Overview -->
-<section class="section" style="padding: 80px 0; background-color: var(--primary-dark); color: white;">
+<section class="section-padding" style="background-color: var(--primary-color); color: var(--white);">
     <div class="container">
-        <div class="section-title" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
-            <h2 style="font-size: 2.5rem; color: white;">What Our Clients Say</h2>
+        <div class="text-center" style="margin-bottom: 50px;" data-aos="fade-up">
+            <h2 style="font-size: 2.8rem; color: var(--white);">What Our Clients Say</h2>
         </div>
         
         <div class="grid-testimonials" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
@@ -153,7 +154,7 @@
 </section>
 
 <!-- Call to Action -->
-<section class="section" style="padding: 100px 0; text-align: center; background-color: var(--bg-light);">
+<section class="section-padding text-center" style="background-color: var(--white);">
     <div class="container" data-aos="zoom-in">
         <h2 style="font-size: 3rem; color: var(--primary-dark); margin-bottom: 20px;">Ready for a Cleaner Space?</h2>
         <p style="font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">Contact us today to schedule your cleaning service. Let us handle the mess so you can focus on what matters most.</p>

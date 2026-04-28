@@ -48,7 +48,7 @@
                 <a href="tel:{{ site_settings.contact_phone|default:'5104096697' }}"><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:'5104096697' }}</a>
             </div>
             <div class="social-links" style="display: flex; gap: 15px; align-items: center;">
-                <a href="#" style="color: white; font-size: 0.9rem; font-weight: 600; border-right: 1px solid rgba(255,255,255,0.3); padding-right: 15px;"><i class="fas fa-user-circle"></i> Client Portal Login</a>
+                <a href="#" style="font-weight: 600; border-right: 1px solid rgba(255,255,255,0.3); padding-right: 15px;"><i class="fas fa-user-circle"></i> Client Portal</a>
                 {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>{% endif %}
                 {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>{% endif %}
             </div>
@@ -86,42 +86,42 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container footer-inner" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;">
-            <div class="footer-col" style="padding-right: 20px;">
-                <h3 style="color: white; font-size: 1.5rem; margin-bottom: 20px;">{{ site_settings.site_name|default:"24 Hours Facility Maintenance Inc." }}</h3>
-                <p style="color: #bbb; line-height: 1.8; margin-bottom: 25px;">Delivering industry-leading facility maintenance, sustainable green cleaning, and comprehensive janitorial services built on a foundation of quality and trust across California.</p>
-                <div style="display: flex; gap: 15px;">
-                    <a href="{% url 'contact' %}" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Request a Quote</a>
-                    <a href="#" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem; background: transparent; border: 1px solid white; color: white;">Client Login</a>
+        <div class="container footer-inner">
+            <div class="footer-col">
+                <h3>{{ site_settings.site_name|default:"24 Hours Facility Maintenance Inc." }}</h3>
+                <p>Delivering industry-leading facility maintenance, sustainable green cleaning, and comprehensive janitorial services built on a foundation of quality and trust across California.</p>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Request a Quote</a>
+                    <a href="#" class="btn btn-secondary">Client Login</a>
                 </div>
             </div>
             <div class="footer-col">
-                <h3 style="color: white; font-size: 1.2rem; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; display: inline-block;">Company Directory</h3>
-                <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <li><a href="{% url 'home' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Home</a></li>
-                    <li><a href="{% url 'services' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Services</a></li>
-                    <li><a href="{% url 'about' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">About Us</a></li>
-                    <li><a href="{% url 'gallery' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Gallery</a></li>
-                    <li><a href="{% url 'quality' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Quality</a></li>
-                    <li><a href="{% url 'sustainability' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Sustainability</a></li>
-                    <li><a href="{% url 'careers' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Careers</a></li>
-                    <li><a href="{% url 'contact' %}" style="color: #bbb; text-decoration: none; transition: color 0.3s;">Contact</a></li>
+                <h3>Company Directory</h3>
+                <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'services' %}">Services</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'gallery' %}">Gallery</a></li>
+                    <li><a href="{% url 'quality' %}">Quality</a></li>
+                    <li><a href="{% url 'sustainability' %}">Sustainability</a></li>
+                    <li><a href="{% url 'careers' %}">Careers</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3 style="color: white; font-size: 1.2rem; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; display: inline-block;">Get in Touch</h3>
+                <h3>Get in Touch</h3>
                 <ul style="list-style: none; padding: 0;">
                     <li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
-                        <i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-top: 5px;"></i>
-                        <span style="color: #bbb;">{{ site_settings.address|default:'638 Webster St. Suite 430, Oakland CA 94607' }}</span>
+                        <i class="fas fa-map-marker-alt" style="color: var(--secondary-color); margin-top: 5px;"></i>
+                        <span>{{ site_settings.address|default:'638 Webster St. Suite 430, Oakland CA 94607' }}</span>
                     </li>
                     <li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
-                        <i class="fas fa-phone-alt" style="color: var(--primary-color); margin-top: 5px;"></i>
-                        <a href="tel:{{ site_settings.contact_phone|default:'5104096697' }}" style="color: #bbb; text-decoration: none;">{{ site_settings.contact_phone|default:'5104096697' }}</a>
+                        <i class="fas fa-phone-alt" style="color: var(--secondary-color); margin-top: 5px;"></i>
+                        <a href="tel:{{ site_settings.contact_phone|default:'5104096697' }}">{{ site_settings.contact_phone|default:'5104096697' }}</a>
                     </li>
                     <li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
-                        <i class="fas fa-envelope" style="color: var(--primary-color); margin-top: 5px;"></i>
-                        <a href="mailto:{{ site_settings.contact_email|default:'info@24hfminc.com' }}" style="color: #bbb; text-decoration: none;">{{ site_settings.contact_email|default:'info@24hfminc.com' }}</a>
+                        <i class="fas fa-envelope" style="color: var(--secondary-color); margin-top: 5px;"></i>
+                        <a href="mailto:{{ site_settings.contact_email|default:'info@24hfminc.com' }}">{{ site_settings.contact_email|default:'info@24hfminc.com' }}</a>
                     </li>
                 </ul>
             </div>

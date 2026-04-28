@@ -3,14 +3,15 @@
 {% block meta_description %}See the difference our professional cleaning services make. Browse our before and after gallery of commercial and residential cleaning projects.{% endblock %}
 
 {% block content %}
-<section class="page-header" style="background: linear-gradient(rgba(11, 37, 89, 0.8), rgba(11, 37, 89, 0.8)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; padding: 120px 0; color: white; text-align: center;">
-    <div class="container" data-aos="fade-up">
+<section class="page-header" style="background: url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
         <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Before & After Gallery</h1>
-        <p class="lead" style="font-size: 1.3rem; max-width: 800px; margin: auto;">Seeing is believing. Browse our portfolio of successful cleaning transformations.</p>
+        <p class="lead" style="font-size: 1.3rem; max-width: 800px; margin: auto;">Seeing is believing. Browse our portfolio of incredible transformations.</p>
     </div>
 </section>
 
-<section style="padding: 80px 0; background-color: var(--bg-light); min-height: 50vh;">
+<section class="section-padding" style="background-color: var(--bg-light); min-height: 50vh;">
     <div class="container">
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 40px;">
             {% for gallery in galleries %}

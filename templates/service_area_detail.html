@@ -4,14 +4,15 @@
 {% block meta_description %}{{ area.meta_description|default:area.description }}{% endblock %}
 
 {% block content %}
-<section class="page-header" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/images/hero-bg.jpg') center/cover; padding: 100px 0; color: white; text-align: center;">
-    <div class="container" data-aos="fade-up">
-        <h1>Cleaning Services in {{ area.city }}</h1>
-        <p class="lead" style="max-width: 600px; margin: 20px auto;">We provide top-rated, professional cleaning solutions throughout {{ area.city }} and surrounding areas.</p>
+<section class="page-header" style="background: url('/static/images/hero-bg.png');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
+        <h1>Janitorial Services in {{ service_area.name }}</h1>
+        <p class="lead" style="max-width: 600px; margin: 20px auto;">Serving businesses and facilities throughout the {{ service_area.name }} region.</p>
     </div>
 </section>
 
-<section class="py-5">
+<section class="section-padding">
     <div class="container">
         <div class="row" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
             <div class="col-md-6" data-aos="fade-right">

@@ -4,16 +4,17 @@
 {% block content %}
 {% load static %}
 <!-- Premium Quality Hero -->
-<section style="background: linear-gradient(rgba(11, 37, 89, 0.9), rgba(0, 0, 0, 0.7)), url('{% static "images/General ServiceMaster Clean Office Clean 024.jpg" %}') center/cover; padding: 160px 0 100px 0; color: white; text-align: center;">
-    <div class="container" data-aos="fade-up">
+<section class="page-header" style="background: url('{% static "images/General ServiceMaster Clean Office Clean 024.jpg" %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
         <span style="background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: inline-block;">Enterprise Standard</span>
-        <h1 style="font-size: 4rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1;">Uncompromising <span style="color: var(--secondary-color);">Quality</span></h1>
-        <p style="font-size: 1.25rem; max-width: 700px; margin: 0 auto; line-height: 1.8; color: #e0e0e0;">We don't just clean; we measure, track, and verify. Experience absolute accountability through our proprietary 3-tier Quality Management Systems.</p>
+        <h1>Uncompromising <span style="color: var(--secondary-color);">Quality</span></h1>
+        <p>We don't just clean; we measure, track, and verify. Experience absolute accountability through our proprietary 3-tier Quality Management Systems.</p>
     </div>
 </section>
 
 <!-- The 3-Tier Quality Framework -->
-<section style="padding: 100px 0; background-color: var(--bg-light);">
+<section class="section-padding" style="background-color: var(--bg-light);">
     <div class="container">
         <div style="text-align: center; margin-bottom: 60px;" data-aos="fade-up">
             <h2 style="font-size: 2.5rem; color: var(--primary-dark); font-weight: 700;">Our 3-Tier Quality Framework</h2>
@@ -53,7 +54,7 @@
 </section>
 
 <!-- Technology Showcase (Dark Section) -->
-<section style="padding: 100px 0; background: #1a1a2e; color: white; overflow: hidden;">
+<section class="section-padding" style="background: #1a1a2e; color: white; overflow: hidden;">
     <div class="container">
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 60px;">
             <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
@@ -124,7 +125,7 @@
 </section>
 
 <!-- Training & Certifications -->
-<section style="padding: 100px 0; background-color: white;">
+<section class="section-padding" style="background-color: white;">
     <div class="container">
         <div style="text-align: center; margin-bottom: 60px;" data-aos="fade-up">
             <h2 style="font-size: 2.5rem; color: var(--primary-dark); font-weight: 700;">World-Class Personnel</h2>
@@ -158,12 +159,12 @@
 </section>
 
 <!-- Call to Action -->
-<section style="padding: 100px 0; background: url('{% static "images/General ServiceMaster Clean Office Clean 024.jpg" %}') center/cover; position: relative; color: white; text-align: center;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 37, 89, 0.9);"></div>
-    <div class="container" style="position: relative; z-index: 1;" data-aos="zoom-in">
-        <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 20px;">Never Worry About Your Facility Again</h2>
-        <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 40px auto; color: #cbd5e1; line-height: 1.8;">Partner with a commercial cleaning provider that builds quality into the very foundation of their operations.</p>
-        <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.2rem; padding: 18px 45px; border-radius: 5px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">Request a Free QA Audit</a>
+<section class="page-header" style="background: url('{% static "images/General ServiceMaster Clean Office Clean 024.jpg" %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="zoom-in">
+        <h2>Never Worry About Your Facility Again</h2>
+        <p>Partner with a commercial cleaning provider that builds quality into the very foundation of their operations.</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary" style="margin-top: 20px;">Request a Free QA Audit</a>
     </div>
 </section>
 {% endblock %}

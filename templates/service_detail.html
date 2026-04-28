@@ -4,14 +4,15 @@
 {% block meta_description %}{{ service.meta_description|default:service.description }}{% endblock %}
 
 {% block content %}
-<section class="page-header" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{% if service.image %}{{ service.image.url }}{% else %}/static/images/hero-bg.jpg{% endif %}') center/cover; padding: 100px 0; color: white; text-align: center;">
-    <div class="container" data-aos="fade-up">
+<section class="page-header" style="background: url('{% if service.image %}{{ service.image.url }}{% else %}/static/images/hero-bg.png{% endif %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
         <h1>{{ service.title }}</h1>
         <p class="lead" style="max-width: 600px; margin: 20px auto;">Professional cleaning tailored entirely for your needs.</p>
     </div>
 </section>
 
-<section class="py-5">
+<section class="section-padding">
     <div class="container">
         <div class="row" style="display: flex; flex-wrap: wrap; gap: 40px;">
             <div class="col-md-8" data-aos="fade-right">

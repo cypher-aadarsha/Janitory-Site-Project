@@ -4,16 +4,17 @@
 {% block content %}
 {% load static %}
 <!-- Premium Eco Hero -->
-<section style="background: linear-gradient(rgba(17, 43, 27, 0.8), rgba(0, 0, 0, 0.7)), url('{% static "images/Education_SMC_Classroom_B-6.jpg" %}') center/cover; padding: 160px 0 100px 0; color: white; text-align: center;">
-    <div class="container" data-aos="fade-up">
+<section class="page-header" style="background: url('{% static "images/Education_SMC_Classroom_B-6.jpg" %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="fade-up">
         <span style="background: rgba(46, 204, 113, 0.2); border: 1px solid rgba(46, 204, 113, 0.5); color: #2ecc71; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: inline-block;">Environmental Stewardship</span>
-        <h1 style="font-size: 4rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1;">Green Cleaning <span style="color: #2ecc71;">Initiatives</span></h1>
-        <p style="font-size: 1.25rem; max-width: 700px; margin: 0 auto; line-height: 1.8; color: #e0e0e0;">Protecting your workforce and preserving our planet. Our sustainable facility management protocols reduce your carbon footprint without compromising hygiene.</p>
+        <h1>Green Cleaning for a <span style="color: var(--secondary-color);">Healthier Future</span></h1>
+        <p>Protecting your staff, your clients, and the planet. We utilize advanced eco-friendly solutions to deliver superior cleanliness without harmful chemical residues.</p>
     </div>
 </section>
 
 <!-- Our Philosophy & Approach -->
-<section style="padding: 100px 0; background-color: white;">
+<section class="section-padding" style="background-color: var(--white);">
     <div class="container">
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 60px;">
             <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
@@ -49,8 +50,8 @@
     </div>
 </section>
 
-<!-- Core Eco Pillars -->
-<section style="padding: 100px 0; background-color: var(--bg-light);">
+<!-- Real Impact Section (Dark) -->
+<section class="section-padding" style="background: #112b1b; color: white; overflow: hidden;">
     <div class="container">
         <div style="text-align: center; margin-bottom: 60px;" data-aos="fade-up">
             <h2 style="font-size: 2.5rem; color: var(--primary-dark); font-weight: 700;">Sustainable Operations Framework</h2>
@@ -83,12 +84,12 @@
 </section>
 
 <!-- Call to Action -->
-<section style="padding: 100px 0; background: url('{% static "images/Education_SMC_Classroom_B-6.jpg" %}') center/cover; position: relative; color: white; text-align: center;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(17, 43, 27, 0.9);"></div>
-    <div class="container" style="position: relative; z-index: 1;" data-aos="zoom-in">
-        <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 20px;">Bring Green Cleaning to Your Facility</h2>
-        <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 40px auto; color: #d1fae5; line-height: 1.8;">Ready to reduce your environmental impact while vastly improving the health and safety geometry of your workplace?</p>
-        <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 1.2rem; padding: 18px 45px; border-radius: 5px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; background-color: #2ecc71; border-color: #2ecc71; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);">Request a Sustainable Quote</a>
+<section class="page-header" style="background: url('{% static "images/Education_SMC_Classroom_B-6.jpg" %}');">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content" data-aos="zoom-in">
+        <h2>Make the Switch to Green Cleaning Today</h2>
+        <p>Show your stakeholders that you care about their health and the environment.</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary" style="margin-top: 20px;">Get Your Eco-Friendly Proposal</a>
     </div>
 </section>
 {% endblock %}
