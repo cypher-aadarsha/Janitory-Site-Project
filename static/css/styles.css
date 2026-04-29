@@ -58,9 +58,63 @@ ul { list-style: none; }
 .navbar .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; }
 .navbar .logo i { color: var(--secondary-color); }
 .nav-links { list-style: none; display: flex; align-items: center; gap: 25px; margin: 0; }
-.nav-links li a { font-weight: 600; color: var(--primary-dark); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px; }
+.nav-links li { position: relative; }
+.nav-links li a { font-weight: 600; color: var(--primary-dark); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px; padding: 10px 0; display: inline-block; }
 .nav-links li a:hover { color: var(--secondary-color); }
-.nav-links li a.btn { color: var(--white) !important; }
+.nav-links li a.btn { color: var(--white) !important; padding: 12px 28px; }
+
+/* Animated Dropdown */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    min-width: 280px;
+    padding: 15px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+    border-top: 3px solid var(--secondary-color);
+}
+.nav-links li:hover .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.nav-dropdown li { width: 100%; padding: 0; }
+.nav-dropdown li a {
+    display: block;
+    padding: 12px 25px;
+    font-size: 0.9rem;
+    color: var(--primary-dark);
+    text-transform: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.3s;
+}
+.nav-dropdown li:last-child a { border-bottom: none; }
+.nav-dropdown li a:hover {
+    background: rgba(46, 204, 113, 0.05);
+    color: var(--secondary-color);
+    padding-left: 30px; /* Slight slide right */
+}
+.nav-dropdown .see-all-link {
+    font-weight: 700;
+    color: var(--accent-color);
+    text-align: center;
+    background: var(--bg-light);
+    margin-top: 5px;
+}
+.nav-dropdown .see-all-link:hover {
+    color: var(--secondary-color);
+    background: #f0f0f0;
+    padding-left: 25px; /* Prevent slide right on See All */
+}
 .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
 .menu-toggle .bar { width: 25px; height: 3px; background: var(--primary-dark); transition: 0.3s; }
 

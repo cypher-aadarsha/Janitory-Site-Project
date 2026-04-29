@@ -68,7 +68,17 @@
             </div>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'services' %}">Services</a></li>
+                <li>
+                    <a href="{% url 'services' %}">Services <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-left: 3px;"></i></a>
+                    <ul class="nav-dropdown">
+                        <li><a href="{% url 'services' %}"><i class="fas fa-building" style="margin-right: 8px; color: var(--secondary-color);"></i> Commercial Cleaning</a></li>
+                        <li><a href="{% url 'services' %}"><i class="fas fa-broom" style="margin-right: 8px; color: var(--secondary-color);"></i> Janitorial Services</a></li>
+                        <li><a href="{% url 'services' %}"><i class="fas fa-fan" style="margin-right: 8px; color: var(--secondary-color);"></i> Professional Floor Care</a></li>
+                        <li><a href="{% url 'services' %}"><i class="fas fa-water" style="margin-right: 8px; color: var(--secondary-color);"></i> Industrial Pressure Washing</a></li>
+                        <li><a href="{% url 'services' %}"><i class="fas fa-shield-virus" style="margin-right: 8px; color: var(--secondary-color);"></i> Daily Disinfection</a></li>
+                        <li><a href="{% url 'services' %}" class="see-all-link">See All Services &rarr;</a></li>
+                    </ul>
+                </li>
                 <li><a href="{% url 'gallery' %}">Gallery</a></li>
                 <li><a href="{% url 'quality' %}">Quality</a></li>
                 <li><a href="{% url 'sustainability' %}">Sustainability</a></li>
