@@ -122,7 +122,7 @@ class JobApplication(models.Model):
 
 class SiteSetting(models.Model):
     site_name = models.CharField(max_length=200, default="24 Hours Facility Maintenance Inc.")
-    contact_email = models.EmailField(default="info@24hfminc.com")
+    contact_email = models.EmailField(default="24hrfacilitymaintenance@gmail.com")
     contact_phone = models.CharField(max_length=20, default="5104096697")
     address = models.CharField(max_length=250, default="638 Webster St. Suite 430, Oakland CA 94607")
     whatsapp_number = models.CharField(max_length=20, blank=True, help_text="Include country code, e.g., 1234567890")
