@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils.text import slugify
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
+from .forms import ServiceForm, ServiceAreaForm, TestimonialForm, SiteSettingForm, GalleryImageForm
 
 def is_staff_or_admin(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
@@ -52,31 +53,20 @@ def cms_service_edit(request, pk=None):
         action = "Add"
         
     if request.method == 'POST':
-        service.title = request.POST.get('title')
-        service.description = request.POST.get('description')
-        service.detailed_content = request.POST.get('detailed_content', '')
-        service.meta_title = request.POST.get('meta_title', '')
-        service.meta_description = request.POST.get('meta_description', '')
-        
-        # Auto-generate slug if empty
-        slug = request.POST.get('slug', '')
-        if not slug and service.title:
-            service.slug = slugify(service.title)
+        form = ServiceForm(request.POST, request.FILES, instance=service)
+        if form.is_valid():
+            svc = form.save(commit=False)
+            if not svc.slug:
+                svc.slug = slugify(svc.title)
+            svc.save()
+            messages.success(request, f"Service '{svc.title}' has been successfully saved.")
+            return redirect('cms_services')
         else:
-            service.slug = slugify(slug)
-            
-        service.icon_class = request.POST.get('icon_class', '')
-        service.order = request.POST.get('order') or 0
-        service.is_active = request.POST.get('is_active') == 'on'
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ServiceForm(instance=service)
         
-        if 'image' in request.FILES:
-            service.image = request.FILES['image']
-            
-        service.save()
-        messages.success(request, f"Service '{service.title}' has been successfully saved.")
-        return redirect('cms_services')
-        
-    return render(request, 'cms/service_form.html', {'service': service, 'action': action})
+    return render(request, 'cms/service_form.html', {'service': service, 'action': action, 'form': form})
 
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
 def cms_service_delete(request, pk):
@@ -104,25 +94,20 @@ def cms_service_area_edit(request, pk=None):
         action = "Add"
         
     if request.method == 'POST':
-        area.city = request.POST.get('city')
-        area.description = request.POST.get('description', '')
-        area.detailed_content = request.POST.get('detailed_content', '')
-        area.meta_title = request.POST.get('meta_title', '')
-        area.meta_description = request.POST.get('meta_description', '')
-        
-        # Auto-generate slug if empty
-        slug = request.POST.get('slug', '')
-        if not slug and area.city:
-            area.slug = slugify(area.city)
+        form = ServiceAreaForm(request.POST, instance=area)
+        if form.is_valid():
+            sa = form.save(commit=False)
+            if not sa.slug:
+                sa.slug = slugify(sa.city)
+            sa.save()
+            messages.success(request, f"Service Area '{sa.city}' has been successfully saved.")
+            return redirect('cms_service_areas')
         else:
-            area.slug = slugify(slug)
-            
-        area.is_active = request.POST.get('is_active') == 'on'
-        area.save()
-        messages.success(request, f"Service Area '{area.city}' has been successfully saved.")
-        return redirect('cms_service_areas')
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ServiceAreaForm(instance=area)
         
-    return render(request, 'cms/service_area_form.html', {'area': area, 'action': action})
+    return render(request, 'cms/service_area_form.html', {'area': area, 'action': action, 'form': form})
 
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
 def cms_service_area_delete(request, pk):
@@ -150,15 +135,17 @@ def cms_testimonial_edit(request, pk=None):
         action = "Add"
         
     if request.method == 'POST':
-        testimonial.client_name = request.POST.get('client_name')
-        testimonial.review_text = request.POST.get('review_text')
-        testimonial.rating = request.POST.get('rating') or 5
-        testimonial.is_featured = request.POST.get('is_featured') == 'on'
-        testimonial.save()
-        messages.success(request, f"Testimonial from '{testimonial.client_name}' has been successfully saved.")
-        return redirect('cms_testimonials')
+        form = TestimonialForm(request.POST, instance=testimonial)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Testimonial has been successfully saved.")
+            return redirect('cms_testimonials')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = TestimonialForm(instance=testimonial)
         
-    return render(request, 'cms/testimonial_form.html', {'testimonial': testimonial, 'action': action})
+    return render(request, 'cms/testimonial_form.html', {'testimonial': testimonial, 'action': action, 'form': form})
 
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
 def cms_testimonial_delete(request, pk):
@@ -199,31 +186,17 @@ def cms_site_settings(request):
         settings_obj = SiteSetting()
         
     if request.method == 'POST':
-        settings_obj.site_name = request.POST.get('site_name')
-        settings_obj.contact_email = request.POST.get('contact_email')
-        settings_obj.contact_phone = request.POST.get('contact_phone')
-        settings_obj.address = request.POST.get('address')
-        settings_obj.whatsapp_number = request.POST.get('whatsapp_number')
-        settings_obj.hero_title = request.POST.get('hero_title', '')
-        settings_obj.hero_subtitle = request.POST.get('hero_subtitle', '')
-        settings_obj.google_review_link = request.POST.get('google_review_link', '')
-        settings_obj.facebook_url = request.POST.get('facebook_url', '')
-        settings_obj.instagram_url = request.POST.get('instagram_url', '')
-
-        # Process dynamic stats counters (with fallback defaults if empty or invalid)
-        try:
-            settings_obj.stat_years = int(request.POST.get('stat_years', 25))
-            settings_obj.stat_clients = int(request.POST.get('stat_clients', 1500))
-            settings_obj.stat_sqft = int(request.POST.get('stat_sqft', 50))
-            settings_obj.stat_retention = int(request.POST.get('stat_retention', 99))
-        except ValueError:
-            pass
+        form = SiteSettingForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Global site settings have been updated successfully.")
+            return redirect('cms_site_settings')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = SiteSettingForm(instance=settings_obj)
         
-        settings_obj.save()
-        messages.success(request, "Global site settings have been updated successfully.")
-        return redirect('cms_site_settings')
-        
-    return render(request, 'cms/site_settings_form.html', {'settings': settings_obj})
+    return render(request, 'cms/site_settings_form.html', {'settings': settings_obj, 'form': form})
 
 # --- Booking Management (CRM) ---
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
@@ -330,19 +303,17 @@ def cms_gallery_edit(request, pk=None):
         action = "Add"
         
     if request.method == 'POST':
-        gallery.title = request.POST.get('title')
-        gallery.description = request.POST.get('description', '')
+        form = GalleryImageForm(request.POST, request.FILES, instance=gallery)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Gallery Image '{form.cleaned_data['title']}' has been successfully saved.")
+            return redirect('cms_galleries')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = GalleryImageForm(instance=gallery)
         
-        if 'before_image' in request.FILES:
-            gallery.before_image = request.FILES['before_image']
-        if 'after_image' in request.FILES:
-            gallery.after_image = request.FILES['after_image']
-            
-        gallery.save()
-        messages.success(request, f"Gallery Image '{gallery.title}' has been successfully saved.")
-        return redirect('cms_galleries')
-        
-    return render(request, 'cms/gallery_form.html', {'gallery': gallery, 'action': action})
+    return render(request, 'cms/gallery_form.html', {'gallery': gallery, 'action': action, 'form': form})
 
 @user_passes_test(is_staff_or_admin, login_url='/admin/login/')
 def cms_gallery_delete(request, pk):

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
+from .forms import BookingForm, JobApplicationForm
 
 def home(request):
     services = Service.objects.filter(is_active=True)[:3]
@@ -23,19 +24,17 @@ def sustainability(request):
 
 def careers(request):
     if request.method == 'POST':
-        app = JobApplication(
-            name=request.POST.get('name'),
-            email=request.POST.get('email'),
-            phone=request.POST.get('phone'),
-            position=request.POST.get('position'),
-            resume_link=request.POST.get('resume_link', ''),
-            cover_letter=request.POST.get('cover_letter', '')
-        )
-        app.save()
-        messages.success(request, "Your application has been received! Our HR team will review it shortly.")
-        return redirect('careers')
+        form = JobApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your application has been received! Our HR team will review it shortly.")
+            return redirect('careers')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = JobApplicationForm()
         
-    return render(request, 'careers.html')
+    return render(request, 'careers.html', {'form': form})
 
 def news(request):
     return render(request, 'news.html')
@@ -69,40 +68,18 @@ def testimonials_page(request):
 
 def contact(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
-        service_id = request.POST.get('service_id')
-        preferred_date = request.POST.get('preferred_date')
-        preferred_time = request.POST.get('preferred_time')
-        notes = request.POST.get('notes')
-
-        # Connect the selected service if provided
-        service_instance = None
-        if service_id:
-            try:
-                service_instance = Service.objects.get(id=service_id)
-            except Service.DoesNotExist:
-                pass
-
-        Booking.objects.create(
-            name=name,
-            email=email,
-            phone=phone,
-            address=address,
-            service=service_instance,
-            preferred_date=preferred_date,
-            preferred_time=preferred_time,
-            notes=notes
-        )
-        
-        # In a real scenario, we'd send an email here using django.core.mail.send_mail
-        messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
-        return redirect('contact')
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
+            return redirect('contact')
+        else:
+            messages.error(request, "Please correct the errors below and try again.")
+    else:
+        form = BookingForm()
 
     services = Service.objects.filter(is_active=True)
-    return render(request, 'contact.html', {'services': services})
+    return render(request, 'contact.html', {'services': services, 'form': form})
 
 from django.http import HttpResponse
 
