@@ -17,7 +17,7 @@ def dashboard_home(request):
     
     # Recent activity
     recent_inquiries = Inquiry.objects.all().order_by('-created_at')[:5]
-    recent_bookings = Booking.objects.all().order_by('-created_at')[:5]
+    recent_bookings = Booking.objects.select_related('service').order_by('-created_at')[:5]
     
     # Aggregations for charts
     from django.db.models import Count
@@ -189,6 +189,9 @@ def cms_site_settings(request):
         form = SiteSettingForm(request.POST, instance=settings_obj)
         if form.is_valid():
             form.save()
+            # Invalidate the cached site settings so changes appear immediately
+            from django.core.cache import cache
+            cache.delete('site_settings')
             messages.success(request, "Global site settings have been updated successfully.")
             return redirect('cms_site_settings')
         else:
@@ -204,9 +207,9 @@ def cms_bookings(request):
     # Optional filtering by status
     status_filter = request.GET.get('status', '')
     if status_filter:
-        bookings = Booking.objects.filter(status=status_filter)
+        bookings = Booking.objects.select_related('service').filter(status=status_filter)
     else:
-        bookings = Booking.objects.all()
+        bookings = Booking.objects.select_related('service').all()
         
     return render(request, 'cms/booking_list.html', {
         'bookings': bookings,
