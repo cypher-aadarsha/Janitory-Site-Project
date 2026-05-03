@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Professional cleaning services in California for commercial and residential properties.{% endblock %}">
-    <title>{% block title %}Cleaning Services{% endblock %} - {{ site_settings.site_name|default:"24 Hours Facility Maintenance Inc." }}</title>
+    <meta name="description" content="{% block meta_description %}24/7 commercial cleaning, janitorial & facility maintenance services in Oakland, California. Trusted by 500+ businesses since 2011. Get a free quote today!{% endblock %}">
+    <title>{% block title %}24/7 Commercial & Facility Cleaning{% endblock %} | California | {{ site_settings.site_name|default:"24 Hours Facility Maintenance" }}</title>
     
     <!-- CSS -->
     {% load static %}
@@ -17,23 +17,56 @@
     <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
-    <!-- Local Business Schema -->
+    <!-- Local Business JSON-LD Schema (Enhanced for SEO) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "CleaningService",
       "name": "{{ site_settings.site_name|default:'24 Hours Facility Maintenance Inc.' }}",
-      "image": "",
+      "alternateName": "24HFM",
+      "description": "Professional 24/7 commercial cleaning, janitorial, and facility maintenance services serving Oakland and the greater San Francisco Bay Area since 2011.",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
       "email": "{{ site_settings.contact_email|default:'24hrfacilitymaintenance@gmail.com' }}",
-      "telephone": "{{ site_settings.contact_phone|default:'5104096697' }}",
+      "telephone": "+1-{{ site_settings.contact_phone|default:'5104096697' }}",
+      "url": "https://24hoursfacilitymaintenance.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "{{ site_settings.address|default:'638 Webster St. Suite 430, Oakland CA 94607' }}",
+        "streetAddress": "638 Webster St. Suite 430",
         "addressLocality": "Oakland",
         "addressRegion": "CA",
+        "postalCode": "94607",
         "addressCountry": "US"
       },
-      "url": "{{ request.build_absolute_uri }}"
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 37.8044,
+        "longitude": -122.2712
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "areaServed": {
+        "@type": "State",
+        "name": "California"
+      },
+      "priceRange": "$$",
+      "sameAs": [
+        "https://www.facebook.com/24hoursfacilitymaintenance"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Facility Maintenance Services",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Commercial Cleaning Services"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Janitorial Services"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Professional Floor Care & Restoration"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Industrial Pressure Washing"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Daily Disinfection"}}
+        ]
+      }
     }
     </script>
     
