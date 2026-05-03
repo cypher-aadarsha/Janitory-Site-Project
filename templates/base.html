@@ -9,7 +9,7 @@
     
     <!-- CSS -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.2">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -166,5 +166,66 @@
         });
     </script>
     {% block scripts %}{% endblock %}
+
+    <!-- GDPR/CCPA Cookie Consent Banner -->
+    <div id="cookie-consent" style="
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+        background: rgba(10, 25, 47, 0.97); backdrop-filter: blur(12px);
+        color: #f0f0f0; padding: 20px 30px;
+        display: none; align-items: center; justify-content: center; gap: 20px;
+        font-size: 0.95rem; line-height: 1.5;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    ">
+        <div style="max-width: 800px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center;">
+            <p style="margin: 0; color: #cbd5e0; flex: 1; min-width: 280px;">
+                <i class="fas fa-cookie-bite" style="color: #2ECC71; margin-right: 8px;"></i>
+                We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept," you consent to our use of cookies in accordance with our
+                <a href="/privacy/" style="color: #3498DB; text-decoration: underline;">Privacy Policy</a>.
+            </p>
+            <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                <button onclick="acceptCookies()" style="
+                    background: #2ECC71; color: white; border: none; padding: 10px 24px;
+                    border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+                    transition: all 0.3s;
+                " onmouseover="this.style.background='#27ae60'; this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.background='#2ECC71'; this.style.transform='translateY(0)'">
+                    Accept All
+                </button>
+                <button onclick="declineCookies()" style="
+                    background: transparent; color: #cbd5e0; border: 1px solid #cbd5e0; padding: 10px 24px;
+                    border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+                    transition: all 0.3s;
+                " onmouseover="this.style.borderColor='#2ECC71'; this.style.color='#2ECC71'"
+                   onmouseout="this.style.borderColor='#cbd5e0'; this.style.color='#cbd5e0'">
+                    Decline
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Cookie Consent Logic
+        (function() {
+            if (!localStorage.getItem('cookie_consent')) {
+                var banner = document.getElementById('cookie-consent');
+                banner.style.display = 'flex';
+                // Trigger animation after render
+                setTimeout(function() { banner.style.transform = 'translateY(0)'; }, 100);
+            }
+        })();
+        function acceptCookies() {
+            localStorage.setItem('cookie_consent', 'accepted');
+            hideBanner();
+        }
+        function declineCookies() {
+            localStorage.setItem('cookie_consent', 'declined');
+            hideBanner();
+        }
+        function hideBanner() {
+            var banner = document.getElementById('cookie-consent');
+            banner.style.transform = 'translateY(100%)';
+            setTimeout(function() { banner.style.display = 'none'; }, 500);
+        }
+    </script>
 </body>
 </html>

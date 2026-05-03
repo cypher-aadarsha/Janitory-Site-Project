@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'janitorial_site.middleware.ContentSecurityPolicyMiddleware',
 ]
 
 ROOT_URLCONF = 'janitorial_site.urls'
@@ -144,4 +145,28 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# ─── Security Headers (Production) ───────────────────────────────────────
+# These settings harden the site against common attacks and satisfy audit tools.
+
+# HSTS: Force browsers to always use HTTPS for 1 year, include subdomains
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# X-Content-Type-Options: Prevent MIME-type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# X-Frame-Options: Prevent clickjacking (already set by middleware, explicit here)
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Referrer-Policy: Only send origin on cross-origin requests
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# SSL Redirect: Redirect all HTTP to HTTPS in production
+SECURE_SSL_REDIRECT = bool(os.getenv('DATABASE_URL'))  # Only in production
+
+# Secure cookies in production
+SESSION_COOKIE_SECURE = bool(os.getenv('DATABASE_URL'))
+CSRF_COOKIE_SECURE = bool(os.getenv('DATABASE_URL'))
 
