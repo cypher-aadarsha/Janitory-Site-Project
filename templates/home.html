@@ -36,20 +36,20 @@
 <section class="counters" style="padding: 60px 0; background: var(--primary-dark); color: white;">
     <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center;">
         <div data-aos="fade-up" data-aos-delay="100">
-            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_years|default:25 }}">0</span>+</h3>
-            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Years of Excellence</p>
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; color: #FFD700;"><span class="counter" data-target="{{ site_settings.stat_years|default:25 }}">0</span>+</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: white;">Years of Excellence</p>
         </div>
         <div data-aos="fade-up" data-aos-delay="200">
-            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_clients|default:1500 }}">0</span>+</h3>
-            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Facilities Maintained</p>
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; color: #FFD700;"><span class="counter" data-target="{{ site_settings.stat_clients|default:1500 }}">0</span>+</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: white;">Facilities Maintained</p>
         </div>
         <div data-aos="fade-up" data-aos-delay="300">
-            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_sqft|default:50 }}">0</span>M</h3>
-            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sq. Ft. Serviced Daily</p>
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; color: #FFD700;"><span class="counter" data-target="{{ site_settings.stat_sqft|default:50 }}">0</span>M</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: white;">Sq. Ft. Serviced Daily</p>
         </div>
         <div data-aos="fade-up" data-aos-delay="400">
-            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700;"><span class="counter" data-target="{{ site_settings.stat_retention|default:99 }}">0</span>%</h3>
-            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Client Retention</p>
+            <h3 style="font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; color: #FFD700;"><span class="counter" data-target="{{ site_settings.stat_retention|default:99 }}">0</span>%</h3>
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: white;">Client Retention</p>
         </div>
     </div>
 </section>
@@ -78,7 +78,7 @@
         </div>
         </div>
         <div style="text-align: center; margin-top: 40px;" data-aos="zoom-in" data-aos-offset="-50">
-            <a href="{% url 'services' %}" class="btn btn-secondary">View All Services</a>
+            <a href="{% url 'services' %}" class="btn btn-outline">View All Services</a>
         </div>
     </div>
 </section>
@@ -179,7 +179,7 @@
                 <i class="fas fa-satellite-dish" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
                 <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Smart Cleaning Technology</h3>
                 <p style="line-height: 1.8;">Our proprietary QA systems provide real-time reporting, ensuring 100% accountability. Using advanced scheduling and supply tracking via our client portal, we deliver precise results without the guesswork.</p>
-                <a href="{% url 'quality' %}" class="btn btn-secondary" style="margin-top: 20px;">Discover Our Tech &rarr;</a>
+                <a href="{% url 'quality' %}" class="btn btn-outline" style="margin-top: 20px;">Discover Our Tech &rarr;</a>
             </div>
         </div>
         <div style="flex: 1; min-width: 300px;" data-aos="fade-left">
