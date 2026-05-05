@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
     
     <!-- CSS -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.3">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=2.0">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -205,7 +204,7 @@
     <!-- GDPR/CCPA Cookie Consent Banner -->
     <div id="cookie-consent" style="
         position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
-        background: rgba(10, 25, 47, 0.97); backdrop-filter: blur(12px);
+        background: rgba(0, 0, 0, 0.97); backdrop-filter: blur(12px);
         color: #f0f0f0; padding: 20px 30px;
         display: none; align-items: center; justify-content: center; gap: 20px;
         font-size: 0.95rem; line-height: 1.5;
@@ -214,24 +213,24 @@
     ">
         <div style="max-width: 800px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center;">
             <p style="margin: 0; color: #cbd5e0; flex: 1; min-width: 280px;">
-                <i class="fas fa-cookie-bite" style="color: #2ECC71; margin-right: 8px;"></i>
+                <i class="fas fa-cookie-bite" style="color: #FFD700; margin-right: 8px;"></i>
                 We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept," you consent to our use of cookies in accordance with our
-                <a href="/privacy/" style="color: #3498DB; text-decoration: underline;">Privacy Policy</a>.
+                <a href="/privacy/" style="color: #4FC3F7; text-decoration: underline;">Privacy Policy</a>.
             </p>
             <div style="display: flex; gap: 10px; flex-shrink: 0;">
                 <button onclick="acceptCookies()" style="
-                    background: #2ECC71; color: white; border: none; padding: 10px 24px;
+                    background: #FF6F00; color: white; border: none; padding: 10px 24px;
                     border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
                     transition: all 0.3s;
-                " onmouseover="this.style.background='#27ae60'; this.style.transform='translateY(-2px)'"
-                   onmouseout="this.style.background='#2ECC71'; this.style.transform='translateY(0)'">
+                " onmouseover="this.style.background='#E65100'; this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.background='#FF6F00'; this.style.transform='translateY(0)'">
                     Accept All
                 </button>
                 <button onclick="declineCookies()" style="
                     background: transparent; color: #cbd5e0; border: 1px solid #cbd5e0; padding: 10px 24px;
                     border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
                     transition: all 0.3s;
-                " onmouseover="this.style.borderColor='#2ECC71'; this.style.color='#2ECC71'"
+                " onmouseover="this.style.borderColor='#4FC3F7'; this.style.color='#4FC3F7'"
                    onmouseout="this.style.borderColor='#cbd5e0'; this.style.color='#cbd5e0'">
                     Decline
                 </button>
