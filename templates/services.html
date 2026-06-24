@@ -18,11 +18,17 @@
     <div class="container">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px;">
             {% for service in services %}
-            <div data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" class="service-item" style="background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;">
-                <div style="padding: 40px; text-align: center; background-color: var(--bg-light); border-bottom: 1px solid #eee;">
+            <div data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00" class="service-item" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                {% if service.image %}
+                <div style="height: 220px; overflow: hidden;">
+                    <img src="{{ service.image.url }}" alt="{{ service.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                {% else %}
+                <div style="padding: 40px; text-align: center; background-color: var(--bg-light); border-bottom: 1px solid #eee; height: 140px; display: flex; align-items: center; justify-content: center;">
                     <i class="{{ service.icon_class|default:'fas fa-broom' }}" style="font-size: 4rem; color: var(--primary-color);"></i>
                 </div>
-                <div style="padding: 30px; flex-grow: 1;">
+                {% endif %}
+                <div style="padding: 30px; flex-grow: 1; border-top: 3px solid var(--primary-color);">
                     <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-dark);"><a href="{% url 'service_detail' service.slug %}" style="text-decoration: none; color: inherit;">{{ service.title }}</a></h3>
                     <p style="line-height: 1.7;">{{ service.description }}</p>
                 </div>

@@ -6,7 +6,7 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero" style="background: url('{% static 'images/hero-bg.png' %}');">
+<section class="hero" style="background: url('{% static 'images/hero-bg.jpg' %}') center/cover no-repeat;">
     <div class="hero-overlay"></div>
     <div class="container hero-content" data-aos="zoom-in" data-aos-duration="1000">
         <h1 data-aos="fade-up" data-aos-delay="200">{{ site_settings.hero_title|default:'Professional Cleaning Services in California' }}</h1>
@@ -90,55 +90,102 @@
             <h2 style="font-size: 2.8rem; color: var(--primary-dark);">Industries We Serve</h2>
             <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">At 24 Hours Facility Maintenance Inc., we understand that each industry has unique facility care needs. Our team is trained to deliver specialized maintenance and cleaning services tailored to the challenges and requirements of your sector. We proudly serve a diverse range of industries with professionalism, discretion, and reliability—24/7.</p>
         </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-            <div data-aos="fade-up" data-aos-delay="100" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-hospital" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Healthcare & Environmental</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Hospitals, Nursing Homes, Clinics, Dental Offices, Dialysis Centers, Rehab Centers.</p>
-                <p style="font-size: 0.85rem; color: #666;">Trained in best practices for infection control, patient privacy, and regulatory compliance.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+            <!-- Healthcare & Environmental -->
+            <div data-aos="fade-up" data-aos-delay="100" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-healthcare-environmental.jpg' %}" alt="Healthcare &amp; Environmental" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-hospital" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Healthcare &amp; Environmental</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Hospitals, Nursing Homes, Clinics, Dental Offices, Dialysis Centers, Rehab Centers.</p>
+                    <p style="font-size: 0.82rem; color: #666;">Trained in best practices for infection control, patient privacy, and regulatory compliance.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="200" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-industry" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Industrial Facilities</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Manufacturing Plants, Warehouses, Food Processing, Automotive, Electronics Production.</p>
-                <p style="font-size: 0.85rem; color: #666;">Heavy-duty cleaning, equipment sanitation, and safety-focused maintenance.</p>
+            <!-- Industrial Facilities -->
+            <div data-aos="fade-up" data-aos-delay="200" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-industrial-facilities.jpg' %}" alt="Industrial Facilities" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-industry" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Industrial Facilities</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Manufacturing Plants, Warehouses, Food Processing, Automotive, Electronics Production.</p>
+                    <p style="font-size: 0.82rem; color: #666;">Heavy-duty cleaning, equipment sanitation, and safety-focused maintenance.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="300" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-building" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Office Buildings</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Corporate HQ, Multi-Tenant Offices, Professional Suites, Co-Working Spaces.</p>
-                <p style="font-size: 0.85rem; color: #666;">From daily janitorial services to specialty cleaning, we help create productive, healthy workplaces.</p>
+            <!-- Office Buildings -->
+            <div data-aos="fade-up" data-aos-delay="300" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-office-buildings.jpg' %}" alt="Office Buildings" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-building" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Office Buildings</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Corporate HQ, Multi-Tenant Offices, Professional Suites, Co-Working Spaces.</p>
+                    <p style="font-size: 0.82rem; color: #666;">From daily janitorial services to specialty cleaning, we help create productive, healthy workplaces.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="400" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-hotel" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Hospitality & Events</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Hotels, Resorts, Conference Centers, Fine Dining Restaurants, Wedding Venues.</p>
-                <p style="font-size: 0.85rem; color: #666;">We maintain guest-facing spaces to the highest standards, enhancing comfort and satisfaction.</p>
+            <!-- Hospitality & Events -->
+            <div data-aos="fade-up" data-aos-delay="400" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-hospitality-events-1.jpg' %}" alt="Hospitality &amp; Events" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-hotel" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Hospitality &amp; Events</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Hotels, Resorts, Conference Centers, Fine Dining Restaurants, Wedding Venues.</p>
+                    <p style="font-size: 0.82rem; color: #666;">We maintain guest-facing spaces to the highest standards, enhancing comfort and satisfaction.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="500" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Education</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">K-12 Schools, Preschools, Daycares, Private Schools, Colleges, Training Hubs.</p>
-                <p style="font-size: 0.85rem; color: #666;">We create safe, clean learning environments with flexible schedules and strict health standards.</p>
+            <!-- Education -->
+            <div data-aos="fade-up" data-aos-delay="500" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-education.jpg' %}" alt="Education" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-graduation-cap" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Education</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">K-12 Schools, Preschools, Daycares, Private Schools, Colleges, Training Hubs.</p>
+                    <p style="font-size: 0.82rem; color: #666;">We create safe, clean learning environments with flexible schedules and strict health standards.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="600" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-church" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Religious Buildings</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Churches, Cathedrals, Mosques, Chapels, Fellowship & Social Halls.</p>
-                <p style="font-size: 0.85rem; color: #666;">Our respectful, discreet staff ensure places of worship and gathering are well-maintained and welcoming.</p>
+            <!-- Religious Buildings -->
+            <div data-aos="fade-up" data-aos-delay="600" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-religious-buildings.jpg' %}" alt="Religious Buildings" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-church" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Religious Buildings</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Churches, Cathedrals, Mosques, Chapels, Fellowship &amp; Social Halls.</p>
+                    <p style="font-size: 0.82rem; color: #666;">Our respectful, discreet staff ensure places of worship and gathering are well-maintained and welcoming.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="700" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-ticket-alt" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Stadiums & Arenas</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Stadiums, Arenas, Performing Arts Theaters, Amusement Centers, Expo Parks.</p>
-                <p style="font-size: 0.85rem; color: #666;">We manage high-traffic event spaces with scalable cleaning teams and rapid turnaround capabilities.</p>
+            <!-- Stadiums & Arenas -->
+            <div data-aos="fade-up" data-aos-delay="700" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-stadiums-arenas.jpg' %}" alt="Stadiums &amp; Arenas" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-ticket-alt" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Stadiums &amp; Arenas</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Stadiums, Arenas, Performing Arts Theaters, Amusement Centers, Expo Parks.</p>
+                    <p style="font-size: 0.82rem; color: #666;">We manage high-traffic event spaces with scalable cleaning teams and rapid turnaround capabilities.</p>
+                </div>
             </div>
-            <div data-aos="fade-up" data-aos-delay="800" style="background: var(--bg-light); border-radius: 10px; padding: 25px; border-top: 4px solid var(--primary-color); box-shadow: var(--shadow);">
-                <i class="fas fa-home" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Multifamily & Retail</h3>
-                <p style="font-size: 0.95rem; margin-bottom: 10px;">Apartments, Assisted Living, Student Housing, Condominiums, Shopping Centers.</p>
-                <p style="font-size: 0.85rem; color: #666;">From common areas to move-in/move-out cleaning, we keep properties clean, safe, and attractive.</p>
+            <!-- Multifamily & Retail -->
+            <div data-aos="fade-up" data-aos-delay="800" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow)'">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <img src="{% static 'images/industry-multifamily-retail.jpg' %}" alt="Multifamily &amp; Retail" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; border-radius: 8px; padding: 6px 10px;"><i class="fas fa-home" style="font-size: 1.2rem;"></i></div>
+                </div>
+                <div style="padding: 25px; border-top: 3px solid var(--primary-color);">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark);">Multifamily &amp; Retail</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 8px; color: #444;">Apartments, Assisted Living, Student Housing, Condominiums, Shopping Centers.</p>
+                    <p style="font-size: 0.82rem; color: #666;">From common areas to move-in/move-out cleaning, we keep properties clean, safe, and attractive.</p>
+                </div>
             </div>
         </div>
         <div style="text-align: center; margin-top: 30px;" data-aos="fade-up">
@@ -161,7 +208,7 @@
             </ul>
         </div>
         <div style="flex: 1; min-width: 300px; text-align: center;" data-aos="fade-left">
-            <img src="{% static 'images/why-choose-us.png' %}" alt="Professional Cleaning Detail" style="width: 100%; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <img src="{% static 'images/why-choose-us.jpg' %}" alt="Why Choose Us - Professional Cleaning" style="width: 100%; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 30px;">
             <div data-aos="zoom-in" data-aos-delay="200" style="background-color: var(--bg-light); padding: 40px; border-radius: 20px; box-shadow: var(--shadow);">
                 <i class="fas fa-shield-alt" style="font-size: 5rem; color: var(--primary-color); margin-bottom: 20px;"></i>
                 <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Fully Insured & Bonded</h3>
