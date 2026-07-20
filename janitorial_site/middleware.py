@@ -59,7 +59,8 @@ class ContentSecurityPolicyMiddleware:
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; "
             "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
             "img-src 'self' data: https:; "
-            "connect-src 'self' https://www.google-analytics.com; "
+            "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; "
+            "frame-src 'self' https://www.googletagmanager.com; "
             "frame-ancestors 'self';"
         )
         response['Content-Security-Policy'] = csp
