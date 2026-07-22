@@ -82,7 +82,7 @@ class Booking(models.Model):
     preferred_date = models.DateField()
     preferred_time = models.TimeField()
     notes = models.TextField(blank=True, help_text="Any special instructions or details about the property.")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='NEW')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     
     # CRM Enhancements
     is_repeat_customer = models.BooleanField(default=False)

@@ -91,7 +91,7 @@
                     
                     <div style="margin-bottom: 20px;">
                         <label for="service_id" style="display: block; margin-bottom: 8px; font-weight: 600;">Service Required *</label>
-                        <select id="service_id" name="service_id" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; background-color: white;">
+                        <select id="service_id" name="service" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; background-color: white;">
                             <option value="">-- Please Select a Service --</option>
                             {% for service in services %}
                             <option value="{{ service.id }}" {% if request.GET.service == service.title %}selected{% endif %}>{{ service.title }}</option>
