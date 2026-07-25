@@ -59,13 +59,21 @@
                 
                 {% if messages %}
                     {% for message in messages %}
-                        <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                        {% if message.tags == 'success' %}
+                        <div id="form-success-message" class="lead-success" data-lead-success="true"
+                             style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
                             <i class="fas fa-check-circle" style="margin-right: 5px;"></i> {{ message }}
                         </div>
+                        {% else %}
+                        <div id="form-error-message" class="lead-error"
+                             style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                            <i class="fas fa-exclamation-circle" style="margin-right: 5px;"></i> {{ message }}
+                        </div>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
 
-                <form method="post" action="{% url 'contact' %}">
+                <form id="contact-form" class="contact-form" method="post" action="{% url 'contact' %}">
                     {% csrf_token %}
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                         <div>
@@ -121,4 +129,23 @@
         </div>
     </div>
 </section>
+
+{% comment %}
+  GA4 Conversion Tracking via GTM Data Layer.
+  This script fires ONLY after a successful server-side form submission.
+  The booking_success flag is set in the Django view only after
+  form.is_valid() + form.save() + redirect (POST-Redirect-GET pattern).
+  This guarantees the event represents a genuine saved lead, not a
+  client-side validation attempt or a page refresh.
+{% endcomment %}
+{% if booking_success %}
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+    'event': 'generate_lead',
+    'lead_source': 'contact_form',
+    'form_id': 'contact-form'
+});
+</script>
+{% endif %}
 {% endblock %}

@@ -67,19 +67,25 @@ def testimonials_page(request):
     return render(request, 'testimonials.html', {'testimonials': testimonials})
 
 def contact(request):
+    booking_success = request.GET.get('success') == '1'
+
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
-            return redirect('contact')
+            return redirect('/contact/?success=1')
         else:
             messages.error(request, "Please correct the errors below and try again.")
     else:
         form = BookingForm()
 
     services = Service.objects.filter(is_active=True)
-    return render(request, 'contact.html', {'services': services, 'form': form})
+    return render(request, 'contact.html', {
+        'services': services,
+        'form': form,
+        'booking_success': booking_success,
+    })
 
 from django.http import HttpResponse
 
