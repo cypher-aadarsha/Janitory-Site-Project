@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'janitorial_site.middleware.AttributionMiddleware',
     'janitorial_site.middleware.ContentSecurityPolicyMiddleware',
 ]
 
@@ -76,6 +77,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.site_settings',
+                'core.context_processors.google_tracking',
             ],
         },
     },
@@ -170,4 +172,55 @@ SECURE_SSL_REDIRECT = bool(os.getenv('DATABASE_URL'))  # Only in production
 # Secure cookies in production
 SESSION_COOKIE_SECURE = bool(os.getenv('DATABASE_URL'))
 CSRF_COOKIE_SECURE = bool(os.getenv('DATABASE_URL'))
+
+
+# ─── Google Tracking (Analytics + Ads) ───────────────────────────────────
+# GA4 measurement ID and Google Ads conversion ID are rendered into every page
+# by the google_tracking context processor. Leave a value blank to disable
+# that tag entirely.
+
+GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', 'G-JLBYG49T3E')
+GOOGLE_ADS_CONVERSION_ID = os.getenv('GOOGLE_ADS_CONVERSION_ID', 'AW-18322970920')
+
+# The conversion LABEL is specific to each conversion action and is only
+# visible in the Google Ads UI (Goals > Conversions > your action > tag setup).
+# It looks like 'AbC-D_efG-h12_34-567'. Without it, Google Ads records page
+# views but cannot attribute a single conversion, so leads look like zero.
+GOOGLE_ADS_LEAD_CONVERSION_LABEL = os.getenv(
+    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', 'wrJhCIeDn-IcEKiyiaFE'
+)
+GOOGLE_ADS_CALL_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_CALL_CONVERSION_LABEL', '')
+
+# Google Tag Manager container. Kept alongside gtag.js so any tags already
+# configured in the container keep working.
+GOOGLE_TAG_MANAGER_ID = os.getenv('GOOGLE_TAG_MANAGER_ID', 'GTM-K3K8Z87F')
+
+
+# ─── Email (lead notifications) ──────────────────────────────────────────
+# Without these, form submissions are saved to the database but nobody is
+# told about them. Set EMAIL_HOST_USER / EMAIL_HOST_PASSWORD in .env to turn
+# notifications on. For Gmail, EMAIL_HOST_PASSWORD must be a 16-character
+# App Password (https://myaccount.google.com/apppasswords), not the account
+# password.
+
+EMAIL_BACKEND = os.getenv(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend'
+)
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '10'))
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'webmaster@localhost')
+
+# Where new lead notifications are delivered. Comma-separated list; falls back
+# to the SiteSetting contact email at send time when left blank.
+LEAD_NOTIFICATION_EMAILS = [
+    addr.strip()
+    for addr in os.getenv('LEAD_NOTIFICATION_EMAILS', '').split(',')
+    if addr.strip()
+]
 

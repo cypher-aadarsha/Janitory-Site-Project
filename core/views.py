@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 from .forms import BookingForm, JobApplicationForm
+from .notifications import notify_new_booking, notify_new_application
 
 def home(request):
     services = Service.objects.filter(is_active=True)[:3]
@@ -26,7 +27,8 @@ def careers(request):
     if request.method == 'POST':
         form = JobApplicationForm(request.POST)
         if form.is_valid():
-            form.save()
+            application = form.save()
+            notify_new_application(application)
             messages.success(request, "Your application has been received! Our HR team will review it shortly.")
             return redirect('careers')
         else:
@@ -68,13 +70,32 @@ def testimonials_page(request):
 
 def contact(request):
     booking_success = request.GET.get('success') == '1'
+    # Used as the Google Ads transaction_id so a page refresh on the success
+    # URL cannot be counted as a second conversion.
+    booking_reference = request.GET.get('ref', '')
 
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            form.save()
+            booking = form.save(commit=False)
+
+            # Attach the marketing attribution captured on the landing page.
+            attribution = request.session.get('attribution') or {}
+            booking.gclid = attribution.get('gclid', '')
+            booking.utm_source = attribution.get('utm_source', '')
+            booking.utm_medium = attribution.get('utm_medium', '')
+            booking.utm_campaign = attribution.get('utm_campaign', '')
+            booking.utm_term = attribution.get('utm_term', '')
+            booking.landing_page = attribution.get('landing_page', '')
+            booking.referrer = attribution.get('referrer', '')
+            booking.save()
+
+            # Alert the team. Best-effort: the lead is already saved, so a
+            # mail failure must not break the customer's experience.
+            notify_new_booking(booking)
+
             messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
-            return redirect('/contact/?success=1')
+            return redirect(f'/contact/?success=1&ref={booking.pk}')
         else:
             messages.error(request, "Please correct the errors below and try again.")
     else:
@@ -85,6 +106,7 @@ def contact(request):
         'services': services,
         'form': form,
         'booking_success': booking_success,
+        'booking_reference': booking_reference,
     })
 
 from django.http import HttpResponse

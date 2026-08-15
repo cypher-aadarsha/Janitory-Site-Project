@@ -87,6 +87,45 @@
     </div>
     {% endif %}
 
+    <!-- Marketing Attribution -->
+    <div style="margin-bottom: 30px;">
+        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Lead Source</p>
+        <div style="background: white; padding: 15px; border: 1px solid var(--cms-border); border-radius: 5px; line-height: 1.8;">
+            {% if booking.is_paid_lead %}
+                <span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                    <i class="fas fa-bullhorn"></i> PAID AD CLICK
+                </span>
+            {% else %}
+                <span style="background: #95a5a6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                    <i class="fas fa-globe"></i> ORGANIC / DIRECT
+                </span>
+            {% endif %}
+
+            <div style="margin-top: 12px; font-size: 0.9rem; color: #555;">
+                {% if booking.utm_source %}
+                <div><strong>Source / Medium:</strong> {{ booking.utm_source }} / {{ booking.utm_medium|default:"n/a" }}</div>
+                {% endif %}
+                {% if booking.utm_campaign %}
+                <div><strong>Campaign:</strong> {{ booking.utm_campaign }}</div>
+                {% endif %}
+                {% if booking.utm_term %}
+                <div><strong>Keyword:</strong> {{ booking.utm_term }}</div>
+                {% endif %}
+                {% if booking.gclid %}
+                <div style="word-break: break-all;"><strong>Google Click ID:</strong> <code>{{ booking.gclid }}</code></div>
+                {% endif %}
+                {% if booking.landing_page %}
+                <div style="word-break: break-all;"><strong>Landing page:</strong> {{ booking.landing_page }}</div>
+                {% endif %}
+                {% if not booking.utm_source and not booking.gclid %}
+                <div style="color: #7f8c8d; font-style: italic;">
+                    No campaign parameters were recorded for this visit.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
     <!-- Status Updater Form -->
     <h3 style="margin-bottom: 15px; color: var(--primary-dark); font-size: 1.2rem; border-top: 1px solid var(--cms-border); padding-top: 20px;">Update CRM Profile</h3>
     <form method="post" style="background: #f8f9fa; padding: 20px; border-radius: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end;">
