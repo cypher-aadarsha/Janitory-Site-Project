@@ -87,7 +87,25 @@ class Booking(models.Model):
     # CRM Enhancements
     is_repeat_customer = models.BooleanField(default=False)
     lifetime_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    
+
+    # ─── Marketing attribution ───────────────────────────────────────────
+    # Captured from the visitor's first landing page and carried in the
+    # session until they submit. Without these, a lead in the CMS cannot be
+    # traced back to the ad click that paid for it.
+    gclid = models.CharField(
+        max_length=255, blank=True,
+        help_text="Google Ads click ID. Present when the lead came from a paid click."
+    )
+    utm_source = models.CharField(max_length=100, blank=True)
+    utm_medium = models.CharField(max_length=100, blank=True)
+    utm_campaign = models.CharField(max_length=150, blank=True)
+    utm_term = models.CharField(max_length=150, blank=True)
+    landing_page = models.CharField(
+        max_length=500, blank=True,
+        help_text="First page of the visit that produced this lead."
+    )
+    referrer = models.CharField(max_length=500, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -95,6 +113,11 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking Request from {self.name} for {self.service}"
+
+    @property
+    def is_paid_lead(self):
+        """True when this lead can be attributed to a Google Ads click."""
+        return bool(self.gclid) or self.utm_medium.lower() in ('cpc', 'ppc', 'paid')
 
 
 class JobApplication(models.Model):
