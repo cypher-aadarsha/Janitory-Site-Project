@@ -186,7 +186,9 @@ GOOGLE_ADS_CONVERSION_ID = os.getenv('GOOGLE_ADS_CONVERSION_ID', 'AW-18322970920
 # visible in the Google Ads UI (Goals > Conversions > your action > tag setup).
 # It looks like 'AbC-D_efG-h12_34-567'. Without it, Google Ads records page
 # views but cannot attribute a single conversion, so leads look like zero.
-GOOGLE_ADS_LEAD_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_LEAD_CONVERSION_LABEL', '')
+GOOGLE_ADS_LEAD_CONVERSION_LABEL = os.getenv(
+    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', 'wrJhCIeDn-IcEKiyiaFE'
+)
 GOOGLE_ADS_CALL_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_CALL_CONVERSION_LABEL', '')
 
 # Google Tag Manager container. Kept alongside gtag.js so any tags already
