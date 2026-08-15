@@ -131,12 +131,16 @@
 </section>
 
 {% comment %}
-  GA4 Conversion Tracking via GTM Data Layer.
-  This script fires ONLY after a successful server-side form submission.
-  The booking_success flag is set in the Django view only after
-  form.is_valid() + form.save() + redirect (POST-Redirect-GET pattern).
-  This guarantees the event represents a genuine saved lead, not a
-  client-side validation attempt or a page refresh.
+  Conversion tracking. This block fires ONLY after a successful server-side
+  form submission: the booking_success flag is set by the Django view after
+  form.is_valid() + form.save() + redirect (POST-Redirect-GET pattern), so
+  the event always represents a genuine saved lead, never a client-side
+  validation attempt.
+
+  Two things are reported:
+    1. dataLayer 'generate_lead'  -> GA4 / anything configured in GTM
+    2. gtag 'conversion'          -> Google Ads, the one that reports in the
+                                     Ads UI and feeds Smart Bidding
 {% endcomment %}
 {% if booking_success %}
 <script>
@@ -146,6 +150,15 @@ window.dataLayer.push({
     'lead_source': 'contact_form',
     'form_id': 'contact-form'
 });
+
+{% if ADS_LEAD_SEND_TO %}
+if (typeof gtag === 'function') {
+    gtag('event', 'conversion', {
+        'send_to': '{{ ADS_LEAD_SEND_TO }}',
+        'transaction_id': '{{ booking_reference|escapejs }}'
+    });
+}
+{% endif %}
 </script>
 {% endif %}
 {% endblock %}

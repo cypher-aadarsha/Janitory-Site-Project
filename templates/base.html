@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% comment %}
+      Google tag (gtag.js) — loads GA4 and the Google Ads conversion tag.
+      This must stay in <head> on every page. Every public template extends
+      base.html, so adding it here covers the whole site.
+
+      The Ads 'config' is what lets Google Ads attribute conversions and set
+      the _gcl_* cookies that link a click to a lead. Without it, Ads can
+      spend budget but records nothing.
+    {% endcomment %}
+    {% if GA_MEASUREMENT_ID or ADS_CONVERSION_ID %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={% if GA_MEASUREMENT_ID %}{{ GA_MEASUREMENT_ID }}{% else %}{{ ADS_CONVERSION_ID }}{% endif %}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      {% if GA_MEASUREMENT_ID %}gtag('config', '{{ GA_MEASUREMENT_ID }}');{% endif %}
+      {% if ADS_CONVERSION_ID %}gtag('config', '{{ ADS_CONVERSION_ID }}');{% endif %}
+    </script>
+    <!-- End Google tag -->
+    {% endif %}
+
+    {% if GTM_CONTAINER_ID %}
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-K3K8Z87F');</script>
+    })(window,document,'script','dataLayer','{{ GTM_CONTAINER_ID }}');</script>
     <!-- End Google Tag Manager -->
+    {% endif %}
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,10 +104,12 @@
     {% block head %}{% endblock %}
 </head>
 <body>
+    {% if GTM_CONTAINER_ID %}
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3K8Z87F"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GTM_CONTAINER_ID }}"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    {% endif %}
 
     <!-- Topbar -->
     <div class="topbar">
@@ -212,6 +238,47 @@
             });
         });
     </script>
+    {% comment %}
+      Click-to-call and WhatsApp tracking.
+
+      Phone calls are the main way a facility-maintenance lead arrives, but a
+      tel: link leaves no trace in Analytics or Ads on its own — the browser
+      hands off to the dialler and nothing is ever reported. This listener
+      fires a GA4 event for every call/WhatsApp tap, and an Ads conversion
+      when a call conversion label is configured.
+
+      Delegated from document so it also covers the floating buttons and any
+      tel: links added later.
+    {% endcomment %}
+    <script>
+    (function() {
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('a[href^="tel:"], a[href*="wa.me/"]');
+            if (!link) return;
+
+            var isWhatsApp = link.href.indexOf('wa.me/') !== -1;
+            var method = isWhatsApp ? 'whatsapp' : 'phone_call';
+
+            // GA4 / GTM: always record the interaction.
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'contact_click',
+                'contact_method': method,
+                'link_url': link.href
+            });
+
+            {% if ADS_CALL_SEND_TO %}
+            // Google Ads: count a tracked call as a conversion.
+            if (typeof gtag === 'function' && !isWhatsApp) {
+                gtag('event', 'conversion', {
+                    'send_to': '{{ ADS_CALL_SEND_TO }}'
+                });
+            }
+            {% endif %}
+        }, false);
+    })();
+    </script>
+
     {% block scripts %}{% endblock %}
 
     <!-- GDPR/CCPA Cookie Consent Banner -->
