@@ -6,7 +6,9 @@ name mismatch meant every submission failed validation while the page still
 looked normal). A broken lead form is expensive and invisible, so the happy
 path is asserted here rather than trusted.
 """
+import json
 import logging
+from unittest import mock
 
 from django.core import mail
 from django.test import TestCase, override_settings
@@ -222,3 +224,84 @@ class ContentSecurityPolicyTests(TestCase):
             for host in self.REQUIRED_HOSTS:
                 with self.subTest(directive=directive, host=host):
                     self.assertIn(host, directives[directive])
+
+
+@override_settings(
+    EMAIL_BACKEND='core.email_backends.BrevoAPIBackend',
+    BREVO_API_KEY='test-key',
+    DEFAULT_FROM_EMAIL='sender@example.com',
+)
+class BrevoBackendTests(TestCase):
+    """
+    The droplet's host blocks outbound SMTP, so lead mail relays over HTTPS
+    instead. These cover the payload shape and, more importantly, that a
+    provider failure still cannot cost us a lead.
+    """
+
+    def setUp(self):
+        self.service = Service.objects.create(
+            title='Pressure Washing', slug='pressure-washing', description='d'
+        )
+        SiteSetting.objects.create(contact_email='owner@example.com')
+        self.payload = {
+            'name': 'Api Lead',
+            'email': 'api@example.com',
+            'phone': '5105557777',
+            'address': '5 Franklin St, Oakland, CA',
+            'service': self.service.pk,
+            'preferred_date': '2030-04-01',
+            'preferred_time': '14:00',
+            'notes': '',
+        }
+
+    def _captured_request(self, mock_urlopen):
+        self.assertTrue(mock_urlopen.called, "Brevo API was never called")
+        request = mock_urlopen.call_args[0][0]
+        return request, json.loads(request.data.decode())
+
+    @mock.patch('core.email_backends.urllib.request.urlopen')
+    def test_booking_sends_via_brevo_api(self, mock_urlopen):
+        mock_urlopen.return_value.__enter__.return_value.status = 201
+
+        self.client.post(reverse('contact'), self.payload)
+
+        request, body = self._captured_request(mock_urlopen)
+        self.assertEqual(request.full_url, 'https://api.brevo.com/v3/smtp/email')
+        self.assertEqual(request.get_header('Api-key'), 'test-key')
+        self.assertEqual(body['sender']['email'], 'sender@example.com')
+        self.assertEqual(body['to'], [{'email': 'owner@example.com'}])
+        self.assertIn('Api Lead', body['subject'])
+        self.assertIn('5105557777', body['textContent'])
+        # Replying to the notification should reach the customer.
+        self.assertEqual(body['replyTo']['email'], 'api@example.com')
+
+    @mock.patch('core.email_backends.urllib.request.urlopen')
+    def test_api_failure_does_not_lose_the_lead(self, mock_urlopen):
+        logging.disable(logging.CRITICAL)
+        self.addCleanup(logging.disable, logging.NOTSET)
+        mock_urlopen.side_effect = OSError("network is unreachable")
+
+        response = self.client.post(reverse('contact'), self.payload)
+
+        self.assertEqual(Booking.objects.count(), 1)
+        self.assertEqual(response.status_code, 302)
+
+    @mock.patch('core.email_backends.urllib.request.urlopen')
+    def test_missing_api_key_skips_send_without_crashing(self, mock_urlopen):
+        logging.disable(logging.CRITICAL)
+        self.addCleanup(logging.disable, logging.NOTSET)
+
+        with override_settings(BREVO_API_KEY=''):
+            response = self.client.post(reverse('contact'), self.payload)
+
+        self.assertEqual(Booking.objects.count(), 1)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(mock_urlopen.called)
+
+    def test_display_name_in_from_address_is_parsed(self):
+        from .email_backends import _address
+        self.assertEqual(
+            _address('24 Hours Facility <hello@example.com>'),
+            {'email': 'hello@example.com', 'name': '24 Hours Facility'},
+        )
+        self.assertEqual(_address('bare@example.com'), {'email': 'bare@example.com'})

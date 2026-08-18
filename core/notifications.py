@@ -39,13 +39,18 @@ def _recipients():
 def _is_email_configured():
     """
     True when there is a real mail backend to send through. Avoids logging a
-    scary traceback on local development where SMTP was never set up.
+    scary traceback on local development where nothing was ever set up.
     """
     backend = getattr(settings, 'EMAIL_BACKEND', '')
-    if 'smtp' not in backend:
-        # console/locmem/file backends are always usable
-        return True
-    return bool(getattr(settings, 'EMAIL_HOST_USER', ''))
+
+    if 'Brevo' in backend:
+        return bool(getattr(settings, 'BREVO_API_KEY', ''))
+
+    if 'smtp' in backend:
+        return bool(getattr(settings, 'EMAIL_HOST_USER', ''))
+
+    # console/locmem/file backends are always usable
+    return True
 
 
 def _send(subject, body, reply_to=None):
@@ -56,8 +61,9 @@ def _send(subject, body, reply_to=None):
 
     if not _is_email_configured():
         logger.warning(
-            "Lead notification skipped: EMAIL_HOST_USER is not set. "
-            "The lead was saved but nobody was emailed."
+            "Lead notification skipped: no credentials for EMAIL_BACKEND %s. "
+            "The lead was saved but nobody was emailed.",
+            getattr(settings, 'EMAIL_BACKEND', '(unset)'),
         )
         return False
 
