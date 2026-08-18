@@ -214,6 +214,13 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '10'))
 
+# Brevo HTTPS API key, used only when EMAIL_BACKEND points at
+# core.email_backends.BrevoAPIBackend. DigitalOcean blocks outbound SMTP on
+# this droplet, so mail relays over port 443 instead. If that block is ever
+# lifted, drop the EMAIL_BACKEND line from .env and the settings above take
+# over again with no code change.
+BREVO_API_KEY = os.getenv('BREVO_API_KEY', '')
+
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'webmaster@localhost')
 
 # Where new lead notifications are delivered. Comma-separated list; falls back
