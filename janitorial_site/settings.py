@@ -187,7 +187,7 @@ GOOGLE_ADS_CONVERSION_ID = os.getenv('GOOGLE_ADS_CONVERSION_ID', 'AW-1962616492'
 # It looks like 'AbC-D_efG-h12_34-567'. Without it, Google Ads records page
 # views but cannot attribute a single conversion, so leads look like zero.
 GOOGLE_ADS_LEAD_CONVERSION_LABEL = os.getenv(
-    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', '<REAL_LABEL_HERE>'
+    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', ''
 )
 GOOGLE_ADS_CALL_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_CALL_CONVERSION_LABEL', '')
 
