@@ -180,14 +180,14 @@ CSRF_COOKIE_SECURE = bool(os.getenv('DATABASE_URL'))
 # that tag entirely.
 
 GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', 'G-JLBYG49T3E')
-GOOGLE_ADS_CONVERSION_ID = os.getenv('GOOGLE_ADS_CONVERSION_ID', 'AW-18322970920')
+GOOGLE_ADS_CONVERSION_ID = os.getenv('GOOGLE_ADS_CONVERSION_ID', 'AW-1962616492')
 
 # The conversion LABEL is specific to each conversion action and is only
 # visible in the Google Ads UI (Goals > Conversions > your action > tag setup).
 # It looks like 'AbC-D_efG-h12_34-567'. Without it, Google Ads records page
 # views but cannot attribute a single conversion, so leads look like zero.
 GOOGLE_ADS_LEAD_CONVERSION_LABEL = os.getenv(
-    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', 'wrJhCIeDn-IcEKiyiaFE'
+    'GOOGLE_ADS_LEAD_CONVERSION_LABEL', '<REAL_LABEL_HERE>'
 )
 GOOGLE_ADS_CALL_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_CALL_CONVERSION_LABEL', '')
 
