@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import logout
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 from .forms import BookingForm, JobApplicationForm
 from .notifications import notify_new_booking, notify_new_application
@@ -118,3 +119,15 @@ def robots_txt(request):
         f"Sitemap: {request.build_absolute_uri('/sitemap.xml')}"
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+def staff_logout(request):
+    """
+    Replaces Django's built-in admin logout view. That view only accepts
+    POST since Django 4.1, but the dashboard's own Logout link (and old
+    bookmarks/history to /admin/logout/) send a plain GET, which returned
+    a raw HTTP 405 error page instead of logging anyone out.
+    """
+    was_authenticated = request.user.is_authenticated
+    if was_authenticated:
+        logout(request)
+    return render(request, 'logged_out.html', {'was_authenticated': was_authenticated})

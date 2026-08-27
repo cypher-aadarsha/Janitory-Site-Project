@@ -20,13 +20,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from core.sitemaps import StaticViewSitemap
-from core.views import robots_txt
+from core.views import robots_txt, staff_logout
 
 sitemaps = {
     'static': StaticViewSitemap,
 }
 
 urlpatterns = [
+    # Must be registered before admin.site.urls: Django's built-in admin
+    # logout view only accepts POST (since Django 4.1) and 405s on the
+    # plain GET that the dashboard's Logout link sends.
+    path('admin/logout/', staff_logout, name='admin_logout'),
     path('admin/', admin.site.urls),
     path('dashboard/', include('core.cms_urls')),
     path('', include('core.urls')),

@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Signed Out | {{ site_settings.site_name|default:"24 Hours Facility Maintenance Inc." }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4FC3F7;
+            --secondary-color: #FF6F00;
+            --dark-color: #1e272e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at 20% 20%, #24333c 0%, var(--dark-color) 55%, #10161a 100%);
+            color: #f0f4f8;
+        }
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 48px 40px 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            animation: rise 0.5s ease-out;
+        }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            height: 48px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 32px;
+        }
+        .icon-badge {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            background: rgba(79, 195, 247, 0.12);
+            border: 1px solid rgba(79, 195, 247, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-badge i {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        p.subtext {
+            color: #a9b7c2;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: var(--secondary-color);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #e65100;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #e7edf2;
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .foot {
+            margin-top: 32px;
+            font-size: 0.8rem;
+            color: #6b7a85;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="{% static 'images/LOGO.svg' %}" alt="24 Hours Facility Maintenance Inc." class="logo">
+        <div class="icon-badge">
+            <i class="fas fa-check"></i>
+        </div>
+        {% if was_authenticated %}
+            <h1>You've been signed out</h1>
+            <p class="subtext">Your dashboard session has ended securely. You can log back in anytime to manage services, bookings, and inquiries.</p>
+        {% else %}
+            <h1>No active session</h1>
+            <p class="subtext">You weren't signed in, but you're all set. Head back to the login page or return to the site.</p>
+        {% endif %}
+        <div class="actions">
+            <a href="/admin/login/" class="btn btn-primary"><i class="fas fa-right-to-bracket"></i> Log In Again</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary"><i class="fas fa-house"></i> Return to Homepage</a>
+        </div>
+        <div class="foot">&copy; {% now "Y" %} {{ site_settings.site_name|default:"24 Hours Facility Maintenance Inc." }}</div>
+    </div>
+</body>
+</html>
