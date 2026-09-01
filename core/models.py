@@ -146,8 +146,8 @@ class JobApplication(models.Model):
 class SiteSetting(models.Model):
     site_name = models.CharField(max_length=200, default="24 Hours Facility Maintenance Inc.")
     contact_email = models.EmailField(default="24hrfacilitymaintenance@gmail.com")
-    contact_phone = models.CharField(max_length=20, default="5104096697")
-    address = models.CharField(max_length=250, default="638 Webster St. Suite 430, Oakland CA 94607")
+    contact_phone = models.CharField(max_length=20, default="5109347490")
+    address = models.CharField(max_length=250, default="601 Willow St. Unit G, Alameda CA 94501")
     whatsapp_number = models.CharField(max_length=20, blank=True, help_text="Include country code, e.g., 1234567890")
     google_review_link = models.URLField(blank=True, null=True, help_text="Link to your Google My Business review page")
     hero_title = models.CharField(max_length=200, default="Professional Cleaning Services in California")

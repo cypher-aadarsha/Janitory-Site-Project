@@ -24,6 +24,9 @@ def quality(request):
 def sustainability(request):
     return render(request, 'sustainability.html')
 
+def privacy(request):
+    return render(request, 'privacy.html')
+
 def careers(request):
     if request.method == 'POST':
         form = JobApplicationForm(request.POST)

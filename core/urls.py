@@ -6,6 +6,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('quality/', views.quality, name='quality'),
     path('sustainability/', views.sustainability, name='sustainability'),
+    path('privacy/', views.privacy, name='privacy'),
     path('careers/', views.careers, name='careers'),
     path('gallery/', views.gallery_page, name='gallery'),
     # path('news/', views.news, name='news'), # Disabled for future phase
