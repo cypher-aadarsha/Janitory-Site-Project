@@ -145,6 +145,69 @@ class BookingSubmissionTests(TestCase):
         # transaction_id lets Google Ads de-duplicate a refreshed success page.
         self.assertContains(success, f"'transaction_id': '{booking.pk}'")
 
+    @override_settings(
+        GOOGLE_ADS_CONVERSION_ID='AW-1234567890',
+        GOOGLE_ADS_LEAD_CONVERSION_LABEL='TestLeadLabel',
+    )
+    def test_conversion_does_not_refire_on_reload(self):
+        """
+        A refresh or back-button hit on the confirmation page must not
+        report a second conversion for the same lead -- Google Ads would
+        otherwise double-count one real booking.
+        """
+        self.client.post(reverse('contact'), self.payload)
+        booking = Booking.objects.get()
+        url = f'/contact/?success=1&ref={booking.pk}'
+
+        first_load = self.client.get(url)
+        second_load = self.client.get(url)
+
+        self.assertContains(first_load, 'generate_lead')
+        self.assertNotContains(second_load, 'generate_lead')
+        self.assertNotContains(second_load, 'AW-1234567890/TestLeadLabel')
+        # The confirmation page itself still renders fine on reload.
+        self.assertEqual(second_load.status_code, 200)
+
+    @override_settings(
+        GOOGLE_ADS_CONVERSION_ID='AW-1234567890',
+        GOOGLE_ADS_LEAD_CONVERSION_LABEL='TestLeadLabel',
+    )
+    def test_forged_success_url_does_not_fire_a_conversion(self):
+        """
+        /contact/?success=1&ref=<anything> is guessable and must not be able
+        to report a fake conversion (or leak another lead's email/phone) on
+        its own, with no real submission behind it.
+        """
+        self.client.post(reverse('contact'), self.payload)
+        real_booking = Booking.objects.get()
+
+        forged = self.client.get('/contact/?success=1&ref=999999')
+
+        self.assertNotContains(forged, 'generate_lead')
+        self.assertNotContains(forged, 'AW-1234567890/TestLeadLabel')
+        self.assertNotContains(forged, real_booking.email)
+
+    @override_settings(
+        GOOGLE_ADS_CONVERSION_ID='AW-1234567890',
+        GOOGLE_ADS_LEAD_CONVERSION_LABEL='TestLeadLabel',
+    )
+    def test_enhanced_conversion_user_data_sent_on_success(self):
+        """Email/phone from the submission is handed to gtag for Enhanced
+        Conversions matching, normalized (lowercased email, E.164 phone)."""
+        self.client.post(reverse('contact'), self.payload)
+        booking = Booking.objects.get()
+        success = self.client.get(f'/contact/?success=1&ref={booking.pk}')
+
+        self.assertContains(success, "gtag('set', 'user_data'")
+        self.assertContains(success, "'email': 'jane@example.com'")
+        self.assertContains(success, "'phone_number': '+15105551234'")
+
+    def test_ga_client_id_captured_from_hidden_field(self):
+        payload = dict(self.payload, ga_client_id='123456789.987654321')
+        self.client.post(reverse('contact'), payload)
+
+        self.assertEqual(Booking.objects.get().ga_client_id, '123456789.987654321')
+
 
 @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class AttributionTests(TestCase):
@@ -305,3 +368,121 @@ class BrevoBackendTests(TestCase):
             {'email': 'hello@example.com', 'name': '24 Hours Facility'},
         )
         self.assertEqual(_address('bare@example.com'), {'email': 'bare@example.com'})
+
+
+class LeadLifecycleTrackingTests(TestCase):
+    """
+    qualify_lead / close_convert_lead: reported server-side (GA4 Measurement
+    Protocol) when staff change a booking's status in the CMS, since no
+    browser is present at that point to fire an event the normal way.
+    """
+
+    def setUp(self):
+        self.service = Service.objects.create(
+            title='Deep Cleaning', slug='deep-cleaning', description='d'
+        )
+        self.booking = Booking.objects.create(
+            name='Lead One', email='lead@example.com', phone='5105550000',
+            service=self.service, address='1 Test St',
+            preferred_date='2030-01-01', preferred_time='09:00',
+            ga_client_id='111111111.222222222',
+        )
+
+    @mock.patch('core.signals.send_ga4_event')
+    def test_pending_to_confirmed_fires_qualify_lead(self, mock_send):
+        self.booking.status = 'CONFIRMED'
+        self.booking.save()
+
+        mock_send.assert_called_once()
+        client_id, event_name, params = mock_send.call_args[0]
+        self.assertEqual(client_id, '111111111.222222222')
+        self.assertEqual(event_name, 'qualify_lead')
+        self.assertEqual(params['transaction_id'], str(self.booking.pk))
+
+        self.booking.refresh_from_db()
+        self.assertTrue(self.booking.qualify_lead_reported)
+        self.assertFalse(self.booking.close_convert_lead_reported)
+
+    @mock.patch('core.signals.send_ga4_event')
+    def test_confirmed_to_completed_fires_close_convert_lead_with_value(self, mock_send):
+        self.booking.status = 'CONFIRMED'
+        self.booking.save()
+        self.booking.lifetime_value = 250
+        self.booking.status = 'COMPLETED'
+        self.booking.save()
+
+        event_name = mock_send.call_args_list[-1][0][1]
+        params = mock_send.call_args_list[-1][0][2]
+        self.assertEqual(event_name, 'close_convert_lead')
+        self.assertEqual(params['currency'], 'USD')
+        self.assertEqual(params['value'], 250.0)
+
+    @mock.patch('core.signals.send_ga4_event')
+    def test_unrelated_status_change_fires_nothing(self, mock_send):
+        self.booking.status = 'CANCELLED'
+        self.booking.save()
+
+        mock_send.assert_not_called()
+
+    @mock.patch('core.signals.send_ga4_event')
+    def test_creating_a_booking_fires_nothing(self, mock_send):
+        Booking.objects.create(
+            name='Brand New', email='new@example.com', phone='5105551111',
+            service=self.service, address='2 Test St',
+            preferred_date='2030-01-02', preferred_time='10:00',
+        )
+        mock_send.assert_not_called()
+
+    @mock.patch('core.signals.send_ga4_event')
+    def test_flapping_status_does_not_double_report(self, mock_send):
+        """
+        A status corrected back and forth (e.g. COMPLETED marked in error,
+        reverted, then marked COMPLETED again) must only report the
+        conversion once -- otherwise one real sale is double-counted.
+        """
+        self.booking.status = 'CONFIRMED'
+        self.booking.save()
+        self.booking.status = 'COMPLETED'
+        self.booking.save()
+        self.booking.status = 'CONFIRMED'
+        self.booking.save()
+        self.booking.status = 'COMPLETED'
+        self.booking.save()
+
+        close_events = [
+            call for call in mock_send.call_args_list
+            if call[0][1] == 'close_convert_lead'
+        ]
+        self.assertEqual(len(close_events), 1)
+
+    def test_missing_ga_client_id_is_logged_not_sent(self):
+        """A booking with no captured client_id (e.g. a phone-in lead a
+        staffer entered by hand) must not crash the status save."""
+        logging.disable(logging.CRITICAL)
+        self.addCleanup(logging.disable, logging.NOTSET)
+
+        booking = Booking.objects.create(
+            name='No Client Id', email='none@example.com', phone='5105552222',
+            service=self.service, address='3 Test St',
+            preferred_date='2030-01-03', preferred_time='11:00',
+        )
+        booking.status = 'CONFIRMED'
+        booking.save()  # must not raise
+
+        booking.refresh_from_db()
+        self.assertTrue(booking.qualify_lead_reported)
+
+    @override_settings(GA4_API_SECRET='test-secret', GOOGLE_ANALYTICS_ID='G-TEST123')
+    @mock.patch('core.ga4.urllib.request.urlopen')
+    def test_ga4_measurement_protocol_payload_shape(self, mock_urlopen):
+        mock_urlopen.return_value.__enter__.return_value.status = 204
+
+        self.booking.status = 'CONFIRMED'
+        self.booking.save()
+
+        request = mock_urlopen.call_args[0][0]
+        self.assertIn('measurement_id=G-TEST123', request.full_url)
+        self.assertIn('api_secret=test-secret', request.full_url)
+        body = json.loads(request.data.decode())
+        self.assertEqual(body['client_id'], '111111111.222222222')
+        self.assertEqual(body['events'][0]['name'], 'qualify_lead')

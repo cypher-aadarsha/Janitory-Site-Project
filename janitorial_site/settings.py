@@ -197,6 +197,18 @@ GOOGLE_ADS_CALL_CONVERSION_LABEL = os.getenv('GOOGLE_ADS_CALL_CONVERSION_LABEL',
 # configured in the container keep working.
 GOOGLE_TAG_MANAGER_ID = os.getenv('GOOGLE_TAG_MANAGER_ID', 'GTM-K3K8Z87F')
 
+# GA4 Measurement Protocol API secret. Lets the CMS report qualify_lead /
+# close_convert_lead server-side when staff change a booking's status in the
+# dashboard -- there is no browser/gtag present at that moment to fire an
+# event the normal way. Always tied to the SAME property as
+# GOOGLE_ANALYTICS_ID above, since events attach to a client_id captured
+# from that property's own _ga cookie.
+#
+# Generate at: GA4 Admin > Data Streams > (your stream) > Measurement
+# Protocol API secrets > Create. Left blank, these events are skipped and
+# logged rather than sent to the wrong (or a nonexistent) secret.
+GA4_API_SECRET = os.getenv('GA4_API_SECRET', '')
+
 
 # ─── Email (lead notifications) ──────────────────────────────────────────
 # Without these, form submissions are saved to the database but nobody is

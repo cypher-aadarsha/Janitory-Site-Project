@@ -106,6 +106,21 @@ class Booking(models.Model):
     )
     referrer = models.CharField(max_length=500, blank=True)
 
+    # ─── GA4 lead-lifecycle reporting ────────────────────────────────────
+    # Captured client-side from the visitor's _ga cookie at submission time.
+    # A staff status change happens later, from the CMS dashboard, with no
+    # browser/gtag present -- this is the only thread tying that later event
+    # back to the visitor's original GA4 session.
+    ga_client_id = models.CharField(
+        max_length=100, blank=True,
+        help_text="GA4 client ID captured at submission. Needed to report qualify_lead/close_convert_lead server-side."
+    )
+    # Set once each event is attempted (sent or not) so a status that later
+    # flaps back and forth (e.g. COMPLETED corrected back to CONFIRMED, then
+    # marked COMPLETED again) cannot double-report the same conversion.
+    qualify_lead_reported = models.BooleanField(default=False)
+    close_convert_lead_reported = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -75,6 +75,7 @@
 
                 <form id="contact-form" class="contact-form" method="post" action="{% url 'contact' %}">
                     {% csrf_token %}
+                    <input type="hidden" name="ga_client_id" id="id_ga_client_id" value="">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                         <div>
                             <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600;">Full Name *</label>
@@ -131,18 +132,31 @@
 </section>
 
 {% comment %}
-  Conversion tracking. This block fires ONLY after a successful server-side
-  form submission: the booking_success flag is set by the Django view after
-  form.is_valid() + form.save() + redirect (POST-Redirect-GET pattern), so
-  the event always represents a genuine saved lead, never a client-side
-  validation attempt.
+  Conversion tracking. This block fires ONLY when fire_conversion is True --
+  set by the Django view when THIS session's own just-created booking
+  matches ?ref= (see RECENT_BOOKING_SESSION_KEY in core/views.py). That
+  session key is popped after one read, so unlike booking_success (which
+  just controls the "thank you" message and stays true across a reload),
+  fire_conversion is true exactly once per real submission. That rules out
+  two ways this could otherwise over-report leads: refreshing/back-buttoning
+  on the confirmation page, and a hand-crafted /contact/?success=1&ref=X URL
+  visited with no real submission behind it.
 
-  Two things are reported:
-    1. dataLayer 'generate_lead'  -> GA4 / anything configured in GTM
-    2. gtag 'conversion'          -> Google Ads, the one that reports in the
+  Three things are reported:
+    1. gtag 'set' 'user_data'     -> Enhanced Conversions: the email/phone
+                                     just submitted, so Google can match this
+                                     conversion even when cookies are
+                                     blocked/shortened (iOS Safari, ITP,
+                                     privacy browsers). gtag hashes and
+                                     normalizes this itself -- that's Google's
+                                     documented preferred integration over
+                                     hashing it ourselves client-side, since
+                                     it avoids normalization mismatches.
+    2. dataLayer 'generate_lead'  -> GA4 / anything configured in GTM
+    3. gtag 'conversion'          -> Google Ads, the one that reports in the
                                      Ads UI and feeds Smart Bidding
 {% endcomment %}
-{% if booking_success %}
+{% if fire_conversion %}
 <script>
 window.dataLayer = window.dataLayer || [];
 window.dataLayer.push({
@@ -151,14 +165,49 @@ window.dataLayer.push({
     'form_id': 'contact-form'
 });
 
-{% if ADS_LEAD_SEND_TO %}
 if (typeof gtag === 'function') {
+    {% if lead_email or lead_phone %}
+    gtag('set', 'user_data', {
+        {% if lead_email %}'email': '{{ lead_email|escapejs }}',{% endif %}
+        {% if lead_phone %}'phone_number': '{{ lead_phone|escapejs }}'{% endif %}
+    });
+    {% endif %}
+
+    {% if ADS_LEAD_SEND_TO %}
     gtag('event', 'conversion', {
         'send_to': '{{ ADS_LEAD_SEND_TO }}',
         'transaction_id': '{{ booking_reference|escapejs }}'
     });
+    {% endif %}
 }
-{% endif %}
 </script>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    // Reads the GA4 client_id straight from the _ga cookie (format
+    // GA1.2.<id-part-1>.<id-part-2>) rather than the async gtag('get', ...)
+    // callback, so the value is ready synchronously at submit time with no
+    // risk of the form posting before it resolves.
+    function getGaClientId() {
+        var match = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+        if (!match) return '';
+        var parts = decodeURIComponent(match[1]).split('.');
+        if (parts.length >= 4) {
+            return parts[2] + '.' + parts[3];
+        }
+        return '';
+    }
+
+    var form = document.getElementById('contact-form');
+    var field = document.getElementById('id_ga_client_id');
+    if (form && field) {
+        form.addEventListener('submit', function() {
+            field.value = getGaClientId();
+        });
+    }
+})();
+</script>
 {% endblock %}

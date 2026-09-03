@@ -1,9 +1,39 @@
+import re
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 from .forms import BookingForm, JobApplicationForm
 from .notifications import notify_new_booking, notify_new_application
+
+# Session key holding the just-submitted booking's PII, used only to render
+# the confirmation page's enhanced-conversion data and to prove a conversion
+# event belongs to a real submission from THIS browser. Never trust the
+# ?ref= query string alone for either purpose -- it is guessable, and would
+# otherwise let anyone fire a fake conversion (or read back a stranger's
+# email/phone) by visiting /contact/?success=1&ref=<any id>.
+RECENT_BOOKING_SESSION_KEY = 'recent_booking_pii'
+
+
+def _normalize_email(value):
+    return (value or '').strip().lower()
+
+
+def _normalize_phone_e164(value):
+    """
+    Best-effort E.164 formatting for Google Enhanced Conversions. Assumes a
+    US number when no country code is present, which matches every number
+    this form has ever collected.
+    """
+    digits = re.sub(r'\D', '', value or '')
+    if len(digits) == 10:
+        return '+1' + digits
+    if len(digits) == 11 and digits.startswith('1'):
+        return '+' + digits
+    if digits:
+        return '+' + digits
+    return ''
 
 def home(request):
     services = Service.objects.filter(is_active=True)[:3]
@@ -74,9 +104,27 @@ def testimonials_page(request):
 
 def contact(request):
     booking_success = request.GET.get('success') == '1'
-    # Used as the Google Ads transaction_id so a page refresh on the success
-    # URL cannot be counted as a second conversion.
+    # Shown in the URL and used as the Google Ads transaction_id. Never
+    # trusted on its own -- see RECENT_BOOKING_SESSION_KEY above.
     booking_reference = request.GET.get('ref', '')
+
+    # Only true when THIS session's own just-created booking matches ?ref=.
+    # Gates the actual tracking scripts (separately from booking_success,
+    # which only gates the "thank you" message) so that:
+    #   - a refresh/back-button on the confirmation page cannot re-fire the
+    #     conversion a second time (the session key is popped after one read)
+    #   - a hand-crafted /contact/?success=1&ref=<anything> URL cannot fire a
+    #     fake conversion or read back another customer's email/phone
+    fire_conversion = False
+    lead_email = ''
+    lead_phone = ''
+    if booking_success and booking_reference:
+        pending = request.session.get(RECENT_BOOKING_SESSION_KEY) or {}
+        if str(pending.get('pk', '')) == booking_reference:
+            lead_email = _normalize_email(pending.get('email', ''))
+            lead_phone = _normalize_phone_e164(pending.get('phone', ''))
+            fire_conversion = True
+            del request.session[RECENT_BOOKING_SESSION_KEY]
 
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -92,11 +140,23 @@ def contact(request):
             booking.utm_term = attribution.get('utm_term', '')
             booking.landing_page = attribution.get('landing_page', '')
             booking.referrer = attribution.get('referrer', '')
+            # Captured client-side from the _ga cookie so a later CMS status
+            # change can report qualify_lead/close_convert_lead against the
+            # same GA4 client_id.
+            booking.ga_client_id = request.POST.get('ga_client_id', '')[:100]
             booking.save()
 
             # Alert the team. Best-effort: the lead is already saved, so a
             # mail failure must not break the customer's experience.
             notify_new_booking(booking)
+
+            # Handed back on the next (GET) request to prove that request
+            # really is this booking's own confirmation load -- see above.
+            request.session[RECENT_BOOKING_SESSION_KEY] = {
+                'pk': booking.pk,
+                'email': booking.email,
+                'phone': booking.phone,
+            }
 
             messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
             return redirect(f'/contact/?success=1&ref={booking.pk}')
@@ -111,6 +171,9 @@ def contact(request):
         'form': form,
         'booking_success': booking_success,
         'booking_reference': booking_reference,
+        'fire_conversion': fire_conversion,
+        'lead_email': lead_email,
+        'lead_phone': lead_phone,
     })
 
 from django.http import HttpResponse
