@@ -113,7 +113,7 @@ class ContentSecurityPolicyMiddleware:
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; "
             "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
             "img-src 'self' data: https:; "
-            f"connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://stats.g.doubleclick.net {google_ads_hosts}; "
+            f"connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://stats.g.doubleclick.net https://ad.doubleclick.net https://www.google.com {google_ads_hosts}; "
             f"frame-src 'self' https://www.googletagmanager.com {google_ads_hosts}; "
             "frame-ancestors 'self';"
         )

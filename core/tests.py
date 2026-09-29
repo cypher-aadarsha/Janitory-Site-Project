@@ -288,6 +288,17 @@ class ContentSecurityPolicyTests(TestCase):
                 with self.subTest(directive=directive, host=host):
                     self.assertIn(host, directives[directive])
 
+    def test_gtag_connect_hosts_allowed(self):
+        csp = self.client.get(reverse('home'))['Content-Security-Policy']
+        connect_src = next(
+            part.strip() for part in csp.split(';')
+            if part.strip().startswith('connect-src')
+        )
+
+        for host in ('https://ad.doubleclick.net', 'https://www.google.com'):
+            with self.subTest(host=host):
+                self.assertIn(host, connect_src)
+
 
 @override_settings(
     EMAIL_BACKEND='core.email_backends.BrevoAPIBackend',
