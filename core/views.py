@@ -1,11 +1,13 @@
 import re
 
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout
 from .models import Service, Testimonial, ServiceArea, Inquiry, SiteSetting, Booking, JobApplication
 from .forms import BookingForm, JobApplicationForm
 from .notifications import notify_new_booking, notify_new_application
+from . import turnstile
 
 # Session key holding the just-submitted booking's PII, used only to render
 # the confirmation page's enhanced-conversion data and to prove a conversion
@@ -128,7 +130,8 @@ def contact(request):
 
     if request.method == 'POST':
         form = BookingForm(request.POST)
-        if form.is_valid():
+        captcha_ok = turnstile.verify(request.POST.get('cf-turnstile-response', ''))
+        if form.is_valid() and captcha_ok:
             booking = form.save(commit=False)
 
             # Attach the marketing attribution captured on the landing page.
@@ -161,7 +164,15 @@ def contact(request):
             messages.success(request, "Your booking request has been submitted successfully. We will call you soon to confirm!")
             return redirect(f'/contact/?success=1&ref={booking.pk}')
         else:
-            messages.error(request, "Please correct the errors below and try again.")
+            if not captcha_ok:
+                messages.error(request, "Please complete the security check and try again.")
+            # The template has no per-field error slots, so spell each
+            # problem out in the message banner.
+            for field_name, errors in form.errors.items():
+                field = form.fields.get(field_name)
+                label = field.label if field and field.label else (field_name.replace('_', ' ').capitalize() if field else '')
+                for error in errors:
+                    messages.error(request, f"{label}: {error}" if label else error)
     else:
         form = BookingForm()
 
@@ -174,6 +185,8 @@ def contact(request):
         'fire_conversion': fire_conversion,
         'lead_email': lead_email,
         'lead_phone': lead_phone,
+        'turnstile_site_key': settings.TURNSTILE_SITE_KEY if turnstile.is_enabled() else '',
+        'facility_size_choices': Booking.FACILITY_SIZE_CHOICES,
     })
 
 from django.http import HttpResponse

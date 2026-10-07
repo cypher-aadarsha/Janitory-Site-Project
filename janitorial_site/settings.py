@@ -210,6 +210,14 @@ GOOGLE_TAG_MANAGER_ID = os.getenv('GOOGLE_TAG_MANAGER_ID', 'GTM-K3K8Z87F')
 GA4_API_SECRET = os.getenv('GA4_API_SECRET', '')
 
 
+# ─── Cloudflare Turnstile (CAPTCHA on the contact form) ──────────────────
+# Create a widget at Cloudflare dashboard > Turnstile, then set both values
+# in .env. If either is blank the CAPTCHA is switched off entirely (widget
+# hidden, no server check), so local dev and tests need no keys.
+TURNSTILE_SITE_KEY = os.getenv('TURNSTILE_SITE_KEY', '')
+TURNSTILE_SECRET_KEY = os.getenv('TURNSTILE_SECRET_KEY', '')
+
+
 # ─── Email (lead notifications) ──────────────────────────────────────────
 # Without these, form submissions are saved to the database but nobody is
 # told about them. Set EMAIL_HOST_USER / EMAIL_HOST_PASSWORD in .env to turn

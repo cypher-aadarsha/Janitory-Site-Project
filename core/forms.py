@@ -2,6 +2,8 @@
 Django Forms for input validation and sanitization.
 Replaces raw request.POST.get() usage across all views.
 """
+import re
+
 from django import forms
 from .models import (
     Service, Testimonial, ServiceArea, Inquiry,
@@ -16,7 +18,7 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = [
-            'name', 'email', 'phone', 'address',
+            'name', 'email', 'phone', 'company_name', 'facility_size', 'address',
             'service', 'preferred_date', 'preferred_time', 'notes'
         ]
         widgets = {
@@ -24,6 +26,17 @@ class BookingForm(forms.ModelForm):
             'preferred_time': forms.TimeInput(attrs={'type': 'time'}),
             'notes': forms.Textarea(attrs={'rows': 4}),
         }
+        labels = {
+            'company_name': 'Company name',
+            'facility_size': 'Facility size',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Optional on the model so older bookings stay valid, but mandatory
+        # for every new lead.
+        self.fields['company_name'].required = True
+        self.fields['facility_size'].required = True
 
     def clean_name(self):
         name = self.cleaned_data.get('name', '').strip()
@@ -39,9 +52,34 @@ class BookingForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone', '').strip()
-        if len(phone) < 7:
+        # Only formatting characters are allowed; anything else (letters,
+        # emoji, "call me") is not a phone number.
+        if not re.fullmatch(r'\+?[\d\s().\-]+', phone):
             raise forms.ValidationError("Please enter a valid phone number.")
+
+        digits = re.sub(r'\D', '', phone)
+        if len(digits) == 11 and digits.startswith('1'):
+            digits = digits[1:]
+
+        # US numbers (every number this site serves): area code and exchange
+        # cannot start with 0 or 1, and a run of one repeated digit is a
+        # placeholder, not a real line.
+        if (
+            len(digits) != 10
+            or digits[0] in '01'
+            or digits[3] in '01'
+            or len(set(digits)) == 1
+        ):
+            raise forms.ValidationError(
+                "Please enter a valid 10-digit US phone number, e.g. (510) 555-1234."
+            )
         return phone
+
+    def clean_company_name(self):
+        company = ' '.join(self.cleaned_data.get('company_name', '').split())
+        if len(company) < 2 or not re.search(r'[A-Za-z0-9]', company):
+            raise forms.ValidationError("Please enter your company name.")
+        return company
 
 
 class JobApplicationForm(forms.ModelForm):

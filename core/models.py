@@ -74,9 +74,24 @@ class Booking(models.Model):
         ('CANCELLED', 'Cancelled'),
     ]
 
+    FACILITY_SIZE_CHOICES = [
+        ('UNDER_2500', 'Under 2,500 sq ft'),
+        ('2500_10000', '2,500 - 10,000 sq ft'),
+        ('10000_50000', '10,000 - 50,000 sq ft'),
+        ('OVER_50000', '50,000+ sq ft'),
+    ]
+    LOW_FIT_FACILITY_SIZES = ('UNDER_2500',)
+
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
+    # blank=True only so bookings created before these fields existed stay
+    # valid; the public form itself requires both (see BookingForm).
+    company_name = models.CharField(max_length=150, blank=True)
+    facility_size = models.CharField(
+        max_length=20, choices=FACILITY_SIZE_CHOICES, blank=True,
+        help_text="Qualifying question: approximate size of the facility to be cleaned."
+    )
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, related_name='bookings')
     address = models.TextField()
     preferred_date = models.DateField()
@@ -133,6 +148,11 @@ class Booking(models.Model):
     def is_paid_lead(self):
         """True when this lead can be attributed to a Google Ads click."""
         return bool(self.gclid) or self.utm_medium.lower() in ('cpc', 'ppc', 'paid')
+
+    @property
+    def is_low_fit(self):
+        """True when the qualifying answer says the facility is below our target size."""
+        return self.facility_size in self.LOW_FIT_FACILITY_SIZES
 
 
 class JobApplication(models.Model):

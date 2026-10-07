@@ -100,16 +100,21 @@ def notify_new_booking(booking):
         )
 
     subject = f"New Booking Request — {booking.name} ({service})"
+    facility_size = booking.get_facility_size_display() if booking.facility_size else "Not specified"
+    if booking.is_low_fit:
+        facility_size += "  <-- LOW FIT (below target size)"
     body = f"""A new booking request was submitted on the website.
 
 CUSTOMER
   Name:     {booking.name}
+  Company:  {booking.company_name or "Not specified"}
   Phone:    {booking.phone}
   Email:    {booking.email}
   Address:  {booking.address}
 
 REQUEST
   Service:  {service}
+  Facility: {facility_size}
   Date:     {booking.preferred_date}
   Time:     {booking.preferred_time}
   Notes:    {booking.notes or "(none)"}

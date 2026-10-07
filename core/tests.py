@@ -14,6 +14,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from .forms import BookingForm
 from .models import Booking, Service, SiteSetting
 
 
@@ -71,6 +72,8 @@ class BookingSubmissionTests(TestCase):
             'name': 'Jane Doe',
             'email': 'jane@example.com',
             'phone': '5105551234',
+            'company_name': 'Acme Corp',
+            'facility_size': '2500_10000',
             'address': '123 Main St, Oakland, CA 94607',
             'service': self.service.pk,
             'preferred_date': '2030-01-15',
@@ -222,6 +225,8 @@ class AttributionTests(TestCase):
             'name': 'Paid Visitor',
             'email': 'paid@example.com',
             'phone': '5105559999',
+            'company_name': 'Acme Corp',
+            'facility_size': '2500_10000',
             'address': '9 Broadway, Oakland, CA',
             'service': self.service.pk,
             'preferred_date': '2030-02-01',
@@ -300,6 +305,165 @@ class ContentSecurityPolicyTests(TestCase):
                 self.assertIn(host, connect_src)
 
 
+class LeadQualificationTests(TestCase):
+    """Company, phone and facility-size rules on the contact form."""
+
+    def setUp(self):
+        self.service = Service.objects.create(
+            title='Office Cleaning', slug='office-cleaning', description='d'
+        )
+        SiteSetting.objects.create(contact_email='owner@example.com')
+        self.payload = {
+            'name': 'Pat Smith',
+            'email': 'pat@example.com',
+            'phone': '(510) 555-1234',
+            'company_name': 'Smith & Co',
+            'facility_size': '10000_50000',
+            'address': '1 Market St, Oakland, CA',
+            'service': self.service.pk,
+            'preferred_date': '2030-05-01',
+            'preferred_time': '09:00',
+            'notes': '',
+        }
+
+    def _post(self, **overrides):
+        return self.client.post(reverse('contact'), dict(self.payload, **overrides))
+
+    def test_formatted_us_phone_is_accepted(self):
+        for phone in ('(510) 555-1234', '510-555-1234', '510.555.1234', '+1 510 555 1234', '15105551234'):
+            with self.subTest(phone=phone):
+                self.assertTrue(BookingForm(dict(self.payload, phone=phone)).is_valid())
+
+    def test_invalid_phones_are_rejected(self):
+        for phone in ('1234567', 'call me', '555555555', '5555555555', '0105551234', '5100551234', '51055512345678'):
+            with self.subTest(phone=phone):
+                form = BookingForm(dict(self.payload, phone=phone))
+                self.assertFalse(form.is_valid())
+                self.assertIn('phone', form.errors)
+
+    def test_company_name_is_required(self):
+        for company in ('', '   ', 'x', '--'):
+            with self.subTest(company=company):
+                response = self._post(company_name=company)
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(Booking.objects.count(), 0)
+
+    def test_facility_size_is_required_and_must_be_a_valid_choice(self):
+        for size in ('', 'HUGE'):
+            with self.subTest(size=size):
+                response = self._post(facility_size=size)
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(Booking.objects.count(), 0)
+
+    def test_validation_errors_are_shown_to_the_visitor(self):
+        response = self._post(phone='123', company_name='')
+        messages = [str(m) for m in response.context['messages']]
+        self.assertTrue(any('Phone' in m for m in messages))
+        self.assertTrue(any('Company name' in m for m in messages))
+
+    def test_submitted_values_survive_a_validation_error(self):
+        response = self._post(phone='123')
+        self.assertContains(response, 'value="Smith &amp; Co"')
+
+    def test_company_and_size_are_saved_and_emailed(self):
+        self._post()
+        booking = Booking.objects.get()
+        self.assertEqual(booking.company_name, 'Smith & Co')
+        self.assertEqual(booking.facility_size, '10000_50000')
+        self.assertFalse(booking.is_low_fit)
+        self.assertIn('Smith & Co', mail.outbox[0].body)
+        self.assertNotIn('LOW FIT', mail.outbox[0].body)
+
+    def test_low_fit_lead_is_accepted_but_flagged(self):
+        response = self._post(facility_size='UNDER_2500')
+        booking = Booking.objects.get()
+        self.assertTrue(booking.is_low_fit)
+        self.assertRedirects(
+            response, f'/contact/?success=1&ref={booking.pk}',
+            fetch_redirect_response=False,
+        )
+        self.assertIn('LOW FIT', mail.outbox[0].body)
+
+
+@override_settings(TURNSTILE_SITE_KEY='site-key', TURNSTILE_SECRET_KEY='secret-key')
+class TurnstileTests(TestCase):
+    """The CAPTCHA blocks bots without ever costing a real lead."""
+
+    def setUp(self):
+        self.service = Service.objects.create(
+            title='Floor Care', slug='floor-care', description='d'
+        )
+        SiteSetting.objects.create(contact_email='owner@example.com')
+        self.payload = {
+            'name': 'Bot Or Not',
+            'email': 'bot@example.com',
+            'phone': '5105551234',
+            'company_name': 'Acme Corp',
+            'facility_size': '2500_10000',
+            'address': '2 Market St, Oakland, CA',
+            'service': self.service.pk,
+            'preferred_date': '2030-06-01',
+            'preferred_time': '09:00',
+            'notes': '',
+            'cf-turnstile-response': 'token-from-widget',
+        }
+
+    def _siteverify(self, success):
+        response = mock.MagicMock()
+        response.read.return_value = json.dumps({'success': success}).encode()
+        response.__enter__.return_value = response
+        return response
+
+    def test_widget_is_rendered_when_configured(self):
+        response = self.client.get(reverse('contact'))
+        self.assertContains(response, 'class="cf-turnstile"')
+        self.assertContains(response, 'data-sitekey="site-key"')
+        self.assertContains(response, 'challenges.cloudflare.com/turnstile/v0/api.js')
+
+    @override_settings(TURNSTILE_SITE_KEY='', TURNSTILE_SECRET_KEY='')
+    def test_widget_is_hidden_when_not_configured(self):
+        self.assertNotContains(self.client.get(reverse('contact')), 'cf-turnstile')
+
+    @mock.patch('core.turnstile.urllib.request.urlopen')
+    def test_passing_the_challenge_saves_the_lead(self, mock_urlopen):
+        mock_urlopen.return_value = self._siteverify(True)
+        self.client.post(reverse('contact'), self.payload)
+        self.assertEqual(Booking.objects.count(), 1)
+
+    @mock.patch('core.turnstile.urllib.request.urlopen')
+    def test_failing_the_challenge_blocks_the_lead(self, mock_urlopen):
+        mock_urlopen.return_value = self._siteverify(False)
+        response = self.client.post(reverse('contact'), self.payload)
+        self.assertEqual(Booking.objects.count(), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @mock.patch('core.turnstile.urllib.request.urlopen')
+    def test_missing_token_blocks_without_calling_cloudflare(self, mock_urlopen):
+        payload = dict(self.payload)
+        del payload['cf-turnstile-response']
+        self.client.post(reverse('contact'), payload)
+        self.assertEqual(Booking.objects.count(), 0)
+        mock_urlopen.assert_not_called()
+
+    @mock.patch('core.turnstile.urllib.request.urlopen', side_effect=OSError('network down'))
+    def test_cloudflare_outage_does_not_lose_the_lead(self, mock_urlopen):
+        logging.disable(logging.CRITICAL)
+        self.addCleanup(logging.disable, logging.NOTSET)
+        self.client.post(reverse('contact'), self.payload)
+        self.assertEqual(Booking.objects.count(), 1)
+
+    def test_csp_allows_turnstile(self):
+        csp = self.client.get(reverse('home'))['Content-Security-Policy']
+        directives = dict(
+            (part.strip().split(' ', 1) + [''])[:2]
+            for part in csp.split(';') if part.strip()
+        )
+        for directive in ('script-src', 'frame-src'):
+            with self.subTest(directive=directive):
+                self.assertIn('https://challenges.cloudflare.com', directives[directive])
+
+
 @override_settings(
     EMAIL_BACKEND='core.email_backends.BrevoAPIBackend',
     BREVO_API_KEY='test-key',
@@ -321,6 +485,8 @@ class BrevoBackendTests(TestCase):
             'name': 'Api Lead',
             'email': 'api@example.com',
             'phone': '5105557777',
+            'company_name': 'Acme Corp',
+            'facility_size': '2500_10000',
             'address': '5 Franklin St, Oakland, CA',
             'service': self.service.pk,
             'preferred_date': '2030-04-01',

@@ -107,14 +107,18 @@ class ContentSecurityPolicyMiddleware:
             "https://td.doubleclick.net"
         )
 
+        # Cloudflare Turnstile (contact-form CAPTCHA) loads its script and
+        # renders its challenge in an iframe, both from this host.
+        turnstile_host = "https://challenges.cloudflare.com"
+
         csp = (
             "default-src 'self'; "
-            f"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com {google_ads_hosts}; "
+            f"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com {turnstile_host} {google_ads_hosts}; "
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; "
             "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
             "img-src 'self' data: https:; "
             f"connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://stats.g.doubleclick.net https://ad.doubleclick.net https://www.google.com {google_ads_hosts}; "
-            f"frame-src 'self' https://www.googletagmanager.com {google_ads_hosts}; "
+            f"frame-src 'self' https://www.googletagmanager.com {turnstile_host} {google_ads_hosts}; "
             "frame-ancestors 'self';"
         )
         response['Content-Security-Policy'] = csp

@@ -69,6 +69,16 @@
             <p style="font-weight: 500;"><a href="tel:{{ booking.phone }}" style="color: var(--cms-primary); text-decoration: none;"><i class="fas fa-phone-alt" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.phone }}</a></p>
         </div>
         <div>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Company</p>
+            <p style="font-weight: 500;"><i class="fas fa-building" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.company_name|default:"Not specified" }}</p>
+        </div>
+        <div>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Facility Size</p>
+            <p style="font-weight: 500;"><i class="fas fa-ruler-combined" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.get_facility_size_display|default:"Not specified" }}
+                {% if booking.is_low_fit %}<span style="background: #fff3e0; color: #e65100; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 6px;">LOW FIT</span>{% endif %}
+            </p>
+        </div>
+        <div>
             <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px;">Service Address</p>
             <p style="font-weight: 500;"><i class="fas fa-map-marker-alt" style="margin-right: 5px; color: #7f8c8d;"></i> {{ booking.address }}</p>
         </div>
