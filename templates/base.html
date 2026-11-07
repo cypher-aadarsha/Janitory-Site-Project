@@ -36,6 +36,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block meta_description %}24/7 commercial cleaning, janitorial & facility maintenance services in Oakland, California. Trusted by 500+ businesses since 2011. Get a free quote today!{% endblock %}">
+    {% load static %}
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
     <title>{% block title %}24/7 Commercial & Facility Cleaning{% endblock %} | California | {{ site_settings.site_name|default:"24 Hours Facility Maintenance" }}</title>
     
     <!-- CSS -->
